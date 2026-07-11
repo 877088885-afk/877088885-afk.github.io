@@ -1094,10 +1094,10 @@
     .standalone-award-content header b { color: #8fd7ff; border-color: rgba(105,196,255,.22); background: rgba(45,152,222,.1); }
 
     @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-      nav, section, .avatar-placeholder, .info-card, .uni-card, .interest-tag, .goal-item, .standalone-select-menu { background: rgba(8,22,39,.94); }
+      nav, section, .avatar-placeholder, .info-card, .uni-card, .interest-tag, .goal-item, .guestbook-card-static, .guestbook-message-static, .standalone-select-menu { background: rgba(8,22,39,.94); }
     }
     @media (prefers-reduced-transparency: reduce) {
-      nav, section, .avatar-placeholder, .info-card, .uni-card, .interest-tag, .goal-item, .standalone-select-menu { background: #0b1d31; backdrop-filter: none; -webkit-backdrop-filter: none; }
+      nav, section, .avatar-placeholder, .info-card, .uni-card, .interest-tag, .goal-item, .guestbook-card-static, .guestbook-message-static, .standalone-select-menu { background: #0b1d31; backdrop-filter: none; -webkit-backdrop-filter: none; }
     }
 
     /* 下拉菜单在文档流中展开，避免覆盖下方内容 */
@@ -1129,6 +1129,156 @@
     }
     @media (max-width: 600px) {
       .standalone-select[data-open="true"] .standalone-select-menu { max-height: min(310px, 44vh); }
+    }
+
+    /* 留言板 */
+    #guestbook { scroll-margin-top: 110px; }
+    .guestbook-card-static {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(260px, .9fr);
+      gap: clamp(18px, 3vw, 32px);
+      align-items: start;
+      padding: clamp(24px, 5vw, 44px);
+      border: 1px solid var(--glass-97-border);
+      border-radius: 28px;
+      background:
+        radial-gradient(circle at 88% 8%, rgba(121,206,255,.05), transparent 36%),
+        radial-gradient(circle at 10% 92%, rgba(177,108,255,.035), transparent 32%),
+        var(--glass-97-light);
+      box-shadow: 0 30px 90px rgba(0,0,0,.28), inset 0 1px rgba(255,255,255,.16);
+      backdrop-filter: var(--glass-97-blur);
+      -webkit-backdrop-filter: var(--glass-97-blur);
+    }
+    .guestbook-kicker-static {
+      display: inline-block;
+      margin-bottom: 16px;
+      color: #79ceff;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .16em;
+    }
+    .guestbook-card-static h3 {
+      margin: 0;
+      color: #f5f9ff;
+      font-size: clamp(24px, 3.2vw, 38px);
+      line-height: 1.2;
+    }
+    .guestbook-card-static > div:first-child > p {
+      margin: 18px 0 0;
+      color: #b6c8d7;
+      font-size: 14px;
+      line-height: 1.9;
+    }
+    .guestbook-form-static {
+      display: grid;
+      gap: 10px;
+      padding: 18px;
+      border: 1px solid rgba(255,255,255,.16);
+      border-radius: 22px;
+      background: rgba(255,255,255,.045);
+      box-shadow: inset 0 1px rgba(255,255,255,.12);
+    }
+    .guestbook-form-static label {
+      color: #8fa7bc;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .14em;
+    }
+    .guestbook-form-static input,
+    .guestbook-form-static textarea {
+      width: 100%;
+      color: #f5f9ff;
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 16px;
+      background: rgba(255,255,255,.07);
+      outline: none;
+      box-shadow: inset 0 1px rgba(255,255,255,.08);
+      transition: border-color .25s ease, box-shadow .25s ease, background .25s ease;
+    }
+    .guestbook-form-static input {
+      min-height: 44px;
+      padding: 0 14px;
+    }
+    .guestbook-form-static textarea {
+      resize: vertical;
+      min-height: 122px;
+      padding: 13px 14px;
+      line-height: 1.7;
+    }
+    .guestbook-form-static input::placeholder,
+    .guestbook-form-static textarea::placeholder { color: #7f95a8; }
+    .guestbook-form-static input:focus,
+    .guestbook-form-static textarea:focus {
+      border-color: rgba(121,205,255,.55);
+      background: rgba(255,255,255,.1);
+      box-shadow: 0 0 0 4px rgba(121,205,255,.12), inset 0 1px rgba(255,255,255,.1);
+    }
+    .guestbook-actions-static {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .guestbook-actions-static span,
+    .guestbook-status-static {
+      color: #8fa7bc;
+      font-size: 12px;
+    }
+    .guestbook-actions-static button {
+      min-height: 42px;
+      padding: 0 18px;
+      color: #fff;
+      border: 1px solid rgba(121,205,255,.34);
+      border-radius: 999px;
+      background: linear-gradient(180deg, rgba(61,178,245,.36), rgba(0,113,227,.26));
+      box-shadow: inset 0 1px rgba(255,255,255,.18), 0 16px 32px rgba(0,113,227,.18);
+      cursor: pointer;
+      transition: transform .24s var(--spring), box-shadow .24s ease, border-color .24s ease;
+    }
+    .guestbook-actions-static button:hover {
+      border-color: rgba(121,205,255,.58);
+      box-shadow: inset 0 1px rgba(255,255,255,.22), 0 18px 38px rgba(0,113,227,.24);
+      transform: translateY(-2px);
+    }
+    .guestbook-status-static { margin: 0; }
+    .guestbook-messages-static {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+    .guestbook-message-static,
+    .guestbook-empty-static {
+      margin: 0;
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: 20px;
+      background: rgba(255,255,255,.055);
+      box-shadow: inset 0 1px rgba(255,255,255,.1);
+    }
+    .guestbook-message-static {
+      padding: 18px;
+      animation: award-item-in .42s var(--spring) both;
+    }
+    .guestbook-message-static header {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .guestbook-message-static strong { color: #f5f9ff; font-size: 14px; }
+    .guestbook-message-static time { color: #8fa7bc; font-size: 12px; white-space: nowrap; }
+    .guestbook-message-static p {
+      margin: 0;
+      color: #c4d5e4;
+      font-size: 14px;
+      line-height: 1.8;
+      overflow-wrap: anywhere;
+    }
+    .guestbook-empty-static {
+      grid-column: 1 / -1;
+      padding: 24px;
+      color: #9fb3c5;
+      text-align: center;
     }
 
     /* 联系方式：公开页面优先保护未成年人隐私 */
@@ -1218,6 +1368,10 @@
       nav ul { width: 100%; justify-content: space-between; }
       nav ul li { flex: 1; }
       nav ul li a { padding-left: 4px; padding-right: 4px; text-align: center; }
+      .guestbook-card-static { grid-template-columns: 1fr; }
+      .guestbook-messages-static { grid-template-columns: 1fr; }
+      .guestbook-actions-static { align-items: stretch; flex-direction: column; }
+      .guestbook-actions-static button { width: 100%; }
       .contact-card-static { grid-template-columns: 1fr; }
       .contact-status-static { min-height: 0; }
     }
@@ -1236,6 +1390,7 @@
     <li><a href="#dream">梦想大学</a></li>
     <li><a href="#interest">兴趣</a></li>
     <li><a href="#goals">目标</a></li>
+    <li><a href="#guestbook">留言板</a></li>
     <li><a href="#contact">联系我</a></li>
   </ul>
 </nav>
@@ -1442,6 +1597,32 @@
     </div>
   </section>
 
+  <!-- 留言板 -->
+  <section id="guestbook">
+    <div class="section-title">留言板</div>
+    <div class="section-subtitle">GUESTBOOK</div>
+    <div class="guestbook-card-static">
+      <div>
+        <span class="guestbook-kicker-static">OPEN CHANNEL · 访客留言</span>
+        <h3>把鼓励、建议或同样的星空梦想，留在这里。</h3>
+        <p>每位访客都可以留言。当前 GitHub Pages 静态版会把留言保存在本设备；如果以后接入数据库，就能升级成所有设备共享的公开留言板。</p>
+      </div>
+      <form class="guestbook-form-static" id="guestbook-form">
+        <label for="guestbook-name">昵称</label>
+        <input id="guestbook-name" type="text" maxlength="12" placeholder="逐星访客" />
+        <label for="guestbook-message">留言内容</label>
+        <textarea id="guestbook-message" maxlength="120" rows="5" placeholder="写一句想对李卓书说的话……"></textarea>
+        <div class="guestbook-actions-static">
+          <span id="guestbook-counter">0/120</span>
+          <button type="submit">发布留言</button>
+        </div>
+        <p class="guestbook-status-static" id="guestbook-status" aria-live="polite">欢迎留下你的想法。</p>
+      </form>
+      <div class="guestbook-messages-static" id="guestbook-list" aria-live="polite"></div>
+      <p class="guestbook-empty-static" id="guestbook-empty">还没有留言，欢迎成为第一位访客。</p>
+    </div>
+  </section>
+
   <!-- 联系我 -->
   <section id="contact">
     <div class="section-title">联系我</div>
@@ -1636,6 +1817,15 @@
   const adminPasswordMessage = document.getElementById('admin-password-message');
   const adminLoginCancel = document.getElementById('admin-login-cancel');
   const adminPasswordCancel = document.getElementById('admin-password-cancel');
+  const guestbookForm = document.getElementById('guestbook-form');
+  const guestbookName = document.getElementById('guestbook-name');
+  const guestbookMessage = document.getElementById('guestbook-message');
+  const guestbookCounter = document.getElementById('guestbook-counter');
+  const guestbookStatus = document.getElementById('guestbook-status');
+  const guestbookList = document.getElementById('guestbook-list');
+  const guestbookEmpty = document.getElementById('guestbook-empty');
+  const guestbookStorageKey = 'lzs-guestbook-v1';
+  const maxGuestbookMessages = 20;
   const schoolOptions = [
     { value: 'primary', label: '曲靖市麒麟区南苑小学' },
     { value: 'middle', label: '曲靖市麒麟区第七中学（现）' }
@@ -1663,6 +1853,7 @@
   let awardOverrides = readAwardOverrides();
   let adminAuthenticated = false;
   let pendingAdminAction = null;
+  let guestbookMessages = readGuestbookMessages();
 
   function getAwardKey(school, grade) {
     return `${school}::${grade}`;
@@ -1820,6 +2011,69 @@
     if (!awards.includes(award)) setCurrentAwards([...awards, award]);
     awardInput.value = '';
     awardAdd.disabled = true;
+  }
+
+  function readGuestbookMessages() {
+    try {
+      const stored = localStorage.getItem(guestbookStorageKey);
+      if (!stored) return [];
+      const parsed = JSON.parse(stored);
+      if (!Array.isArray(parsed)) return [];
+      return parsed.filter(item => (
+        item
+        && typeof item.id === 'string'
+        && typeof item.name === 'string'
+        && typeof item.message === 'string'
+        && typeof item.createdAt === 'number'
+      )).slice(0, maxGuestbookMessages);
+    } catch {
+      return [];
+    }
+  }
+
+  function writeGuestbookMessages() {
+    try {
+      localStorage.setItem(guestbookStorageKey, JSON.stringify(guestbookMessages.slice(0, maxGuestbookMessages)));
+    } catch {
+      guestbookStatus.textContent = '浏览器暂时无法保存，但本页仍会显示你的留言。';
+    }
+  }
+
+  function formatGuestbookTime(time) {
+    try {
+      return new Intl.DateTimeFormat('zh-CN', {
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit'
+      }).format(time);
+    } catch {
+      return '刚刚';
+    }
+  }
+
+  function createGuestbookId() {
+    return window.crypto?.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+  }
+
+  function renderGuestbookMessages() {
+    guestbookList.replaceChildren(...guestbookMessages.map(item => {
+      const card = document.createElement('article');
+      const header = document.createElement('header');
+      const name = document.createElement('strong');
+      const time = document.createElement('time');
+      const body = document.createElement('p');
+
+      card.className = 'guestbook-message-static';
+      name.textContent = item.name;
+      time.textContent = formatGuestbookTime(item.createdAt);
+      time.dateTime = new Date(item.createdAt).toISOString();
+      body.textContent = item.message;
+      header.append(name, time);
+      card.append(header, body);
+      return card;
+    }));
+    guestbookEmpty.hidden = guestbookMessages.length > 0;
   }
 
   function closePicker(picker) {
@@ -1999,6 +2253,31 @@
     setAdminAuthenticated(true);
     closeAdminModal();
   });
+  guestbookMessage.addEventListener('input', () => {
+    guestbookCounter.textContent = `${guestbookMessage.value.length}/120`;
+  });
+  guestbookForm.addEventListener('submit', event => {
+    event.preventDefault();
+    const cleanName = guestbookName.value.trim().slice(0, 12) || '逐星访客';
+    const cleanMessage = guestbookMessage.value.trim().slice(0, 120);
+
+    if (!cleanMessage) {
+      guestbookStatus.textContent = '先写一点留言内容吧。';
+      return;
+    }
+
+    guestbookMessages = [{
+      id: createGuestbookId(),
+      name: cleanName,
+      message: cleanMessage,
+      createdAt: Date.now()
+    }, ...guestbookMessages].slice(0, maxGuestbookMessages);
+    writeGuestbookMessages();
+    renderGuestbookMessages();
+    guestbookMessage.value = '';
+    guestbookCounter.textContent = '0/120';
+    guestbookStatus.textContent = '留言已发射成功。';
+  });
 
   document.addEventListener('pointerdown', event => {
     document.querySelectorAll('.standalone-select').forEach(picker => {
@@ -2010,6 +2289,7 @@
   renderPickerOptions(gradePicker, gradeOptions.middle.map(grade => ({ value: grade, label: grade })), '初二（现）');
   awardAdd.disabled = true;
   updateAwards();
+  renderGuestbookMessages();
 </script>
 
 </body>
