@@ -198,8 +198,13 @@
       color: #4a90b8;
       font-size: 0.8rem;
       letter-spacing: 2px;
+      text-decoration: none;
+      cursor: pointer;
       animation: bounce 2s infinite;
     }
+    .scroll-hint:hover,
+    .scroll-hint:focus-visible { color: #79ceff; }
+    .scroll-hint:focus-visible { outline: 2px solid rgba(121,206,255,.7); outline-offset: 8px; }
     .scroll-hint svg { width: 20px; opacity: 0.6; }
     @keyframes bounce {
       0%, 100% { transform: translateY(0); }
@@ -1098,12 +1103,12 @@
       志在飞翔，仰望<em>航空航天</em>的无限苍穹。
     </p>
 
-    <div class="scroll-hint">
+    <a class="scroll-hint" href="#about" aria-label="向下探索到关于我板块">
       <span>向下探索</span>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <polyline points="6 9 12 15 18 9"/>
       </svg>
-    </div>
+    </a>
   </div>
 
   <!-- 关于我 -->
@@ -1355,9 +1360,10 @@
 
   // 导航使用可控缓动，长距离跳转也保持自然顺滑
   const navLinks = [...document.querySelectorAll('nav a[href^="#"]')];
+  const anchorLinks = [...document.querySelectorAll('a[href^="#"]')];
   let scrollFrame = null;
 
-  navLinks.forEach(link => {
+  anchorLinks.forEach(link => {
     link.addEventListener('click', event => {
       const target = document.querySelector(link.getAttribute('href'));
       if (!target) return;
@@ -1371,7 +1377,7 @@
       const distance = destination - start;
       const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-      navLinks.forEach(item => item.classList.toggle('is-active', item === link));
+      navLinks.forEach(item => item.classList.toggle('is-active', item.getAttribute('href') === link.getAttribute('href')));
       history.pushState(null, '', link.getAttribute('href'));
 
       if (reducedMotion || Math.abs(distance) < 2) {
