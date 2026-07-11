@@ -345,11 +345,17 @@
       border-radius: 50px;
       font-size: 0.9rem;
       color: #b0d8f0;
+      text-decoration: none;
+      cursor: pointer;
       transition: background 0.3s, border-color 0.3s;
     }
     .interest-tag:hover {
       background: rgba(0, 100, 180, 0.35);
       border-color: rgba(0, 170, 255, 0.5);
+    }
+    .interest-tag:focus-visible {
+      outline: 2px solid rgba(120, 210, 255, 0.95);
+      outline-offset: 4px;
     }
     .interest-tag .icon { font-size: 1.2rem; }
 
@@ -1406,13 +1412,13 @@
     <div class="section-title">兴趣爱好</div>
     <div class="section-subtitle">INTERESTS & HOBBIES</div>
     <div class="interest-list">
-      <div class="interest-tag"><span class="icon">🚀</span>航空航天科普</div>
-      <div class="interest-tag"><span class="icon">🔭</span>天文观测</div>
-      <div class="interest-tag"><span class="icon">💻</span>编程与技术</div>
-      <div class="interest-tag"><span class="icon">📐</span>数学与物理</div>
-      <div class="interest-tag"><span class="icon">📚</span>科学阅读</div>
-      <div class="interest-tag"><span class="icon">✈️</span>飞行模拟</div>
-      <div class="interest-tag"><span class="icon">🌌</span>宇宙探索</div>
+      <a class="interest-tag" href="https://www.baidu.com/s?wd=航空航天科普" target="_blank" rel="noreferrer" aria-label="在百度搜索：航空航天科普"><span class="icon">🚀</span>航空航天科普</a>
+      <a class="interest-tag" href="https://www.baidu.com/s?wd=天文观测" target="_blank" rel="noreferrer" aria-label="在百度搜索：天文观测"><span class="icon">🔭</span>天文观测</a>
+      <a class="interest-tag" href="https://www.baidu.com/s?wd=编程与技术" target="_blank" rel="noreferrer" aria-label="在百度搜索：编程与技术"><span class="icon">💻</span>编程与技术</a>
+      <a class="interest-tag" href="https://www.baidu.com/s?wd=数学与物理" target="_blank" rel="noreferrer" aria-label="在百度搜索：数学与物理"><span class="icon">📐</span>数学与物理</a>
+      <a class="interest-tag" href="https://www.baidu.com/s?wd=科学阅读" target="_blank" rel="noreferrer" aria-label="在百度搜索：科学阅读"><span class="icon">📚</span>科学阅读</a>
+      <a class="interest-tag" href="https://www.baidu.com/s?wd=飞行模拟" target="_blank" rel="noreferrer" aria-label="在百度搜索：飞行模拟"><span class="icon">✈️</span>飞行模拟</a>
+      <a class="interest-tag" href="https://www.baidu.com/s?wd=宇宙探索" target="_blank" rel="noreferrer" aria-label="在百度搜索：宇宙探索"><span class="icon">🌌</span>宇宙探索</a>
     </div>
   </section>
 
