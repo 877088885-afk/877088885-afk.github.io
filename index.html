@@ -1,0 +1,1558 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>李卓书 — 个人主页</title>
+  <style>
+    /* ===== 全局重置 ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: auto; }
+    section[id] { scroll-margin-top: 82px; }
+
+    /* ===== 星空背景 ===== */
+    body {
+      font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      background: #020b18;
+      color: #d0e8ff;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* 星星画布 */
+    #stars-canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* ===== 导航栏 ===== */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 40px;
+      background: rgba(2, 11, 24, 0.85);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(0, 174, 255, 0.2);
+      transform: translateZ(0);
+      will-change: transform;
+    }
+    nav .logo {
+      font-size: 1.2rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: #00aaff;
+      text-transform: uppercase;
+    }
+    nav ul { list-style: none; display: flex; gap: 32px; }
+    nav ul li a {
+      position: relative;
+      text-decoration: none;
+      color: #90c8f0;
+      font-size: 0.9rem;
+      letter-spacing: 1px;
+      transition: color 0.25s;
+    }
+    nav ul li a:hover { color: #00aaff; }
+    nav ul li a::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -8px;
+      height: 2px;
+      background: #ff6b35;
+      transform: scaleX(0);
+      transform-origin: right;
+      transition: transform 0.32s cubic-bezier(.22, 1, .36, 1);
+    }
+    nav ul li a.is-active { color: #ffffff; }
+    nav ul li a.is-active::after { transform: scaleX(1); transform-origin: left; }
+
+    /* ===== 主内容 ===== */
+    main {
+      position: relative;
+      z-index: 1;
+      padding-top: 80px;
+    }
+
+    /* ===== Hero 区域 ===== */
+    .hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      text-align: center;
+      padding: 60px 20px 40px;
+    }
+
+    /* 轨道动画容器 */
+    .orbit-wrapper {
+      position: relative;
+      width: 220px;
+      height: 220px;
+      margin-bottom: 36px;
+    }
+    /* 照片占位 */
+    .avatar-placeholder {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #0d2a45, #0a4a7a);
+      border: 3px solid #00aaff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      box-shadow: 0 0 30px rgba(0, 170, 255, 0.4);
+      overflow: hidden;
+    }
+    .avatar-placeholder svg { width: 48px; height: 48px; opacity: 0.6; }
+    .avatar-placeholder span { font-size: 0.68rem; color: #7ab8d8; letter-spacing: 1px; }
+
+    /* 轨道环 */
+    .orbit-ring {
+      position: absolute;
+      top: 50%; left: 50%;
+      border-radius: 50%;
+      border: 1px dashed rgba(0, 170, 255, 0.4);
+      transform-origin: center center;
+    }
+    .orbit-ring-1 {
+      width: 200px; height: 200px;
+      margin-top: -100px; margin-left: -100px;
+      animation: orbit-spin 8s linear infinite;
+    }
+    .orbit-ring-2 {
+      width: 160px; height: 160px;
+      margin-top: -80px; margin-left: -80px;
+      animation: orbit-spin 5s linear infinite reverse;
+    }
+    /* 绕轨道的小卫星点 */
+    .orbit-ring-1::after, .orbit-ring-2::after {
+      content: '';
+      position: absolute;
+      top: -4px; left: 50%;
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: #00aaff;
+      box-shadow: 0 0 8px #00aaff;
+      transform: translateX(-50%);
+    }
+    .orbit-ring-2::after { background: #ff6b35; box-shadow: 0 0 8px #ff6b35; width: 6px; height: 6px; }
+
+    @keyframes orbit-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+    .hero h1 {
+      font-size: clamp(2rem, 6vw, 3.2rem);
+      font-weight: 800;
+      letter-spacing: 4px;
+      background: linear-gradient(90deg, #00aaff, #ffffff, #00aaff);
+      background-size: 200% auto;
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      -webkit-text-fill-color: transparent;
+      animation: shine 4s linear infinite;
+    }
+    @keyframes shine { to { background-position: 200% center; } }
+
+    .hero .subtitle {
+      margin-top: 12px;
+      font-size: 1rem;
+      color: #7ab8d8;
+      letter-spacing: 2px;
+    }
+    .hero .tagline {
+      margin-top: 20px;
+      font-size: 1.1rem;
+      color: #c0ddf0;
+      max-width: 520px;
+      line-height: 1.8;
+    }
+    .hero .tagline em {
+      font-style: normal;
+      color: #00aaff;
+      font-weight: 600;
+    }
+
+    /* 滚动提示箭头 */
+    .scroll-hint {
+      margin-top: 48px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      color: #4a90b8;
+      font-size: 0.8rem;
+      letter-spacing: 2px;
+      animation: bounce 2s infinite;
+    }
+    .scroll-hint svg { width: 20px; opacity: 0.6; }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(6px); }
+    }
+
+    /* ===== Section 通用 ===== */
+    section {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 80px 24px;
+    }
+    .section-title {
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: 3px;
+      color: #00aaff;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .section-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, rgba(0,170,255,0.5), transparent);
+    }
+    .section-subtitle {
+      color: #5a9abd;
+      font-size: 0.85rem;
+      letter-spacing: 2px;
+      margin-bottom: 36px;
+    }
+
+    /* ===== 关于我 ===== */
+    .about-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+    }
+    .info-card {
+      background: rgba(0, 60, 120, 0.2);
+      border: 1px solid rgba(0, 170, 255, 0.15);
+      border-radius: 12px;
+      padding: 20px 24px;
+      transition: border-color 0.3s, transform 0.3s;
+    }
+    .info-card:hover {
+      border-color: rgba(0, 170, 255, 0.5);
+      transform: translateY(-4px);
+    }
+    .info-card .label {
+      font-size: 0.75rem;
+      color: #4a90b8;
+      letter-spacing: 2px;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+    .info-card .value {
+      font-size: 1rem;
+      color: #d0e8ff;
+      font-weight: 600;
+    }
+
+    /* ===== 梦想大学 ===== */
+    .uni-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 28px;
+    }
+    .uni-card {
+      background: rgba(0, 40, 80, 0.4);
+      border: 1px solid rgba(0, 170, 255, 0.2);
+      border-radius: 16px;
+      padding: 28px;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .uni-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+    }
+    .uni-card.buaa::before { background: linear-gradient(90deg, #003087, #00aaff); }
+    .uni-card.hit::before  { background: linear-gradient(90deg, #8b0000, #ff6b35); }
+    .uni-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 40px rgba(0, 170, 255, 0.15);
+    }
+    .uni-card .uni-icon { font-size: 2.8rem; margin-bottom: 14px; }
+    .uni-card h3 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 6px;
+    }
+    .uni-card .uni-en {
+      font-size: 0.75rem;
+      color: #4a90b8;
+      letter-spacing: 1px;
+      margin-bottom: 14px;
+    }
+    .uni-card p {
+      font-size: 0.9rem;
+      color: #90b8d0;
+      line-height: 1.7;
+    }
+    .uni-tag {
+      display: inline-block;
+      margin-top: 14px;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      letter-spacing: 1px;
+      font-weight: 600;
+    }
+    .buaa .uni-tag { background: rgba(0, 100, 200, 0.25); color: #60b8ff; border: 1px solid rgba(0, 150, 255, 0.3); }
+    .hit  .uni-tag { background: rgba(200, 50, 0, 0.2);  color: #ff9a70; border: 1px solid rgba(255, 100, 50, 0.3); }
+
+    /* ===== 兴趣爱好 ===== */
+    .interest-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+    .interest-tag {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      background: rgba(0, 60, 120, 0.25);
+      border: 1px solid rgba(0, 170, 255, 0.2);
+      border-radius: 50px;
+      font-size: 0.9rem;
+      color: #b0d8f0;
+      transition: background 0.3s, border-color 0.3s;
+    }
+    .interest-tag:hover {
+      background: rgba(0, 100, 180, 0.35);
+      border-color: rgba(0, 170, 255, 0.5);
+    }
+    .interest-tag .icon { font-size: 1.2rem; }
+
+    /* ===== 我的目标 ===== */
+    .goals {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+    }
+    .goal-item {
+      background: rgba(0, 40, 80, 0.3);
+      border-left: 3px solid #00aaff;
+      border-radius: 0 10px 10px 0;
+      padding: 18px 20px;
+    }
+    .goal-item .phase {
+      font-size: 0.72rem;
+      color: #00aaff;
+      letter-spacing: 2px;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+    }
+    .goal-item p { font-size: 0.92rem; color: #b0cce0; line-height: 1.6; }
+
+    /* ===== 页脚 ===== */
+    footer {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 40px 20px;
+      border-top: 1px solid rgba(0, 170, 255, 0.1);
+      color: #3a6888;
+      font-size: 0.82rem;
+      letter-spacing: 1px;
+    }
+    footer span { color: #00aaff; }
+
+    /* ===== 响应式 ===== */
+    @media (max-width: 600px) {
+      nav ul { gap: 16px; }
+      nav { padding: 14px 20px; }
+    }
+
+    /* ===== 通透灵动主题 ===== */
+    :root {
+      --apple-blue: #0071e3;
+      --apple-text: #1d1d1f;
+      --apple-secondary: #6e6e73;
+      --glass: rgba(255, 255, 255, 0.62);
+      --spring: cubic-bezier(.2, .8, .2, 1);
+    }
+
+    body {
+      color: var(--apple-text);
+      background:
+        radial-gradient(circle at 8% 8%, rgba(90,200,250,.2), transparent 30rem),
+        radial-gradient(circle at 92% 34%, rgba(191,90,242,.13), transparent 32rem),
+        linear-gradient(145deg, #f8fbff, #f4f3f8 58%, #eef4fb);
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'PingFang SC', 'Helvetica Neue', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    #stars-canvas { opacity: .5; mix-blend-mode: multiply; }
+
+    nav {
+      top: 16px;
+      left: 50%;
+      right: auto;
+      width: min(calc(100% - 32px), 1080px);
+      min-height: 64px;
+      padding: 10px 16px;
+      color: var(--apple-text);
+      border: 1px solid rgba(255,255,255,.84);
+      border-radius: 22px;
+      background: rgba(255,255,255,.66);
+      box-shadow: 0 12px 40px rgba(34,58,82,.12), inset 0 1px rgba(255,255,255,.92);
+      backdrop-filter: blur(28px) saturate(180%);
+      -webkit-backdrop-filter: blur(28px) saturate(180%);
+      transform: translateX(-50%) translateZ(0);
+    }
+    nav .logo {
+      color: var(--apple-text);
+      font-size: .92rem;
+      letter-spacing: .08em;
+    }
+    nav ul {
+      gap: 3px;
+      padding: 4px;
+      border-radius: 999px;
+      background: rgba(118,118,128,.09);
+    }
+    nav ul li a {
+      display: block;
+      padding: 8px 13px;
+      color: #5d5d61;
+      border-radius: 999px;
+      font-size: .78rem;
+      letter-spacing: 0;
+      transition: color .3s var(--spring), background .35s var(--spring), transform .3s var(--spring);
+    }
+    nav ul li a:hover { color: var(--apple-text); background: rgba(255,255,255,.58); transform: scale(1.025); }
+    nav ul li a::after { bottom: 1px; left: 20%; right: 20%; height: 2px; border-radius: 999px; background: var(--apple-blue); }
+    nav ul li a.is-active { color: var(--apple-text); background: rgba(255,255,255,.86); box-shadow: 0 3px 10px rgba(31,45,61,.1); }
+
+    main { padding-top: 0; }
+    .hero {
+      position: relative;
+      min-height: 100svh;
+      padding: 138px 20px 80px;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 50% 30%, rgba(255,255,255,.92), transparent 24%),
+        radial-gradient(circle at 62% 35%, rgba(90,200,250,.24), transparent 30%),
+        radial-gradient(circle at 80% 70%, rgba(191,90,242,.12), transparent 26%);
+    }
+    .hero::before,
+    .hero::after {
+      content: '';
+      position: absolute;
+      z-index: -1;
+      border-radius: 50%;
+      pointer-events: none;
+      animation: liquid-drift 9s ease-in-out infinite alternate;
+    }
+    .hero::before {
+      width: 360px;
+      height: 360px;
+      left: -130px;
+      top: 18%;
+      background: radial-gradient(circle at 30% 25%, rgba(255,255,255,.9), rgba(90,200,250,.18) 56%, rgba(0,113,227,.07));
+      box-shadow: 0 35px 90px rgba(50,173,230,.14);
+    }
+    .hero::after {
+      width: 230px;
+      height: 230px;
+      right: 6%;
+      bottom: 4%;
+      background: radial-gradient(circle at 28% 22%, rgba(255,255,255,.92), rgba(191,90,242,.13) 58%, rgba(0,113,227,.06));
+      box-shadow: 0 30px 90px rgba(175,82,222,.14);
+      animation-delay: -3s;
+    }
+    @keyframes liquid-drift {
+      from { transform: translate3d(0,-8px,0) scale(1); }
+      to { transform: translate3d(24px,18px,0) scale(1.06); }
+    }
+
+    .orbit-wrapper { animation: glass-float 7s ease-in-out infinite; }
+    @keyframes glass-float { 50% { transform: translateY(-12px) rotate(.5deg); } }
+    .avatar-placeholder {
+      color: var(--apple-text);
+      border: 1px solid rgba(255,255,255,.9);
+      background: rgba(255,255,255,.62);
+      box-shadow: 0 24px 70px rgba(52,77,103,.16), inset 0 1px rgba(255,255,255,.96);
+      backdrop-filter: blur(26px) saturate(160%);
+      -webkit-backdrop-filter: blur(26px) saturate(160%);
+    }
+    .avatar-placeholder span { color: #86868b; }
+    .orbit-ring { border-color: rgba(0,113,227,.25); }
+    .orbit-ring-1::after, .orbit-ring-2::after { background: #0071e3; box-shadow: 0 0 12px rgba(0,113,227,.55); }
+    .orbit-ring-2::after { background: #ff9f0a; box-shadow: 0 0 12px rgba(255,159,10,.6); }
+    .hero h1 {
+      color: var(--apple-text);
+      background: linear-gradient(120deg, #1d1d1f 10%, #53677c 55%, #0071e3 110%);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-size: clamp(2.8rem, 7vw, 5.2rem);
+      letter-spacing: .12em;
+      animation: soft-arrive .85s var(--spring) both;
+    }
+    .hero .subtitle { color: #86868b; }
+    .hero .tagline { color: var(--apple-secondary); font-size: 1rem; animation: soft-arrive .9s .08s var(--spring) both; }
+    .hero .tagline em { color: var(--apple-blue); }
+    .scroll-hint {
+      padding: 10px 14px;
+      color: #6e6e73;
+      border: 1px solid rgba(255,255,255,.84);
+      border-radius: 999px;
+      background: rgba(255,255,255,.56);
+      box-shadow: 0 10px 28px rgba(46,70,96,.08);
+      backdrop-filter: blur(20px);
+    }
+    @keyframes soft-arrive {
+      from { opacity: 0; transform: translateY(24px) scale(.985); filter: blur(7px); }
+      to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+    }
+
+    section {
+      margin-bottom: 28px;
+      padding: 62px clamp(24px, 6vw, 64px);
+      border: 1px solid rgba(255,255,255,.84);
+      border-radius: 40px;
+      background: rgba(255,255,255,.56);
+      box-shadow: 0 24px 70px rgba(46,70,96,.1), inset 0 1px rgba(255,255,255,.95);
+      backdrop-filter: blur(28px) saturate(150%);
+      -webkit-backdrop-filter: blur(28px) saturate(150%);
+    }
+    .section-title { color: var(--apple-text); font-size: clamp(1.8rem, 4vw, 2.7rem); letter-spacing: -.03em; }
+    .section-title::after { background: linear-gradient(90deg, rgba(0,113,227,.26), transparent); }
+    .section-subtitle { color: #86868b; letter-spacing: .1em; }
+    .about-grid { gap: 14px; }
+    .info-card {
+      border: 1px solid rgba(255,255,255,.92);
+      border-radius: 24px;
+      background: rgba(255,255,255,.64);
+      box-shadow: 0 12px 34px rgba(46,70,96,.07), inset 0 1px rgba(255,255,255,.95);
+      transition: transform .48s var(--spring), box-shadow .48s var(--spring), background .3s ease;
+    }
+    .info-card:hover { border-color: #fff; background: rgba(255,255,255,.88); box-shadow: 0 22px 48px rgba(46,70,96,.13); transform: translateY(-7px) scale(1.015); }
+    .info-card .label { color: #86868b; }
+    .info-card .value { color: var(--apple-text); }
+
+    #dream {
+      background:
+        radial-gradient(circle at 88% 12%, rgba(90,200,250,.25), transparent 35%),
+        radial-gradient(circle at 8% 100%, rgba(191,90,242,.14), transparent 34%),
+        rgba(244,248,255,.68);
+    }
+    .uni-card {
+      min-height: 320px;
+      padding: 30px;
+      border: 1px solid rgba(255,255,255,.9);
+      border-radius: 30px;
+      background: rgba(255,255,255,.62);
+      box-shadow: 0 18px 50px rgba(46,70,96,.1), inset 0 1px rgba(255,255,255,.95);
+      transition: transform .52s var(--spring), box-shadow .52s var(--spring), background .3s ease;
+    }
+    .uni-card:hover { border-color: #fff; background: rgba(255,255,255,.84); box-shadow: 0 30px 65px rgba(46,70,96,.16); transform: translateY(-9px) scale(1.012); }
+    a.uni-card { color: inherit; text-decoration: none; cursor: pointer; }
+    a.uni-card:focus-visible { outline: 3px solid rgba(0,113,227,.55); outline-offset: 5px; }
+    .uni-card h3 { color: var(--apple-text); }
+    .uni-card .uni-en { color: #86868b; }
+    .uni-card p { color: var(--apple-secondary); }
+    .buaa .uni-tag { color: #0066cc; border-color: rgba(0,113,227,.12); background: rgba(0,113,227,.07); }
+    .hit .uni-tag { color: #8d3db5; border-color: rgba(175,82,222,.12); background: rgba(175,82,222,.07); }
+
+    .interest-tag {
+      color: #3a3a3c;
+      border: 1px solid rgba(255,255,255,.9);
+      background: rgba(255,255,255,.62);
+      box-shadow: 0 10px 26px rgba(46,70,96,.07), inset 0 1px #fff;
+      transition: transform .4s var(--spring), background .3s ease, box-shadow .4s var(--spring);
+    }
+    .interest-tag:hover { color: #0071e3; border-color: #fff; background: rgba(255,255,255,.9); box-shadow: 0 16px 34px rgba(46,70,96,.12); transform: translateY(-5px) scale(1.025); }
+    .goal-item {
+      min-height: 150px;
+      padding: 24px;
+      border: 1px solid rgba(255,255,255,.9);
+      border-left: 3px solid #0071e3;
+      border-radius: 4px 24px 24px 4px;
+      background: rgba(255,255,255,.62);
+      box-shadow: 0 14px 38px rgba(46,70,96,.08), inset 0 1px #fff;
+      transition: transform .45s var(--spring), box-shadow .45s var(--spring);
+    }
+    .goal-item:hover { box-shadow: 0 24px 52px rgba(46,70,96,.13); transform: translateY(-6px); }
+    .goal-item .phase { color: #0071e3; }
+    .goal-item p { color: var(--apple-secondary); }
+
+    .selector-card .label { display: block; }
+    .selector-card .select-shell { position: relative; margin-top: 14px; }
+    .selector-card select {
+      width: 100%;
+      min-height: 46px;
+      padding: 10px 38px 10px 12px;
+      overflow: hidden;
+      color: var(--apple-text);
+      border: 1px solid rgba(29,29,31,.09);
+      border-radius: 14px;
+      outline: none;
+      background: rgba(255,255,255,.68);
+      box-shadow: inset 0 1px rgba(255,255,255,.94), 0 7px 18px rgba(46,70,96,.05);
+      font: 560 13px/1.25 -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif;
+      text-overflow: ellipsis;
+      appearance: none;
+      -webkit-appearance: none;
+      cursor: pointer;
+      transition: border-color .28s ease, background .28s ease, box-shadow .28s ease, transform .35s var(--spring);
+    }
+    .selector-card select:hover { border-color: rgba(0,113,227,.22); background: rgba(255,255,255,.9); box-shadow: 0 10px 22px rgba(46,70,96,.08), inset 0 1px #fff; transform: translateY(-1px); }
+    .selector-card select:focus-visible { border-color: rgba(0,113,227,.55); box-shadow: 0 0 0 4px rgba(0,113,227,.12), inset 0 1px #fff; }
+    .selector-card .select-chevron { position: absolute; top: 50%; right: 13px; color: var(--apple-blue); font-size: 17px; pointer-events: none; transform: translateY(-58%); }
+    .selector-note { display: block; margin-top: 9px; color: #86868b; font-size: .68rem; letter-spacing: .06em; }
+
+    .standalone-select { position: relative; z-index: 5; }
+    .standalone-select-trigger {
+      width: 100%;
+      min-height: 46px;
+      padding: 10px 38px 10px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      overflow: hidden;
+      color: var(--apple-text);
+      border: 1px solid rgba(29,29,31,.09);
+      border-radius: 14px;
+      background: rgba(255,255,255,.68);
+      box-shadow: inset 0 1px rgba(255,255,255,.94), 0 7px 18px rgba(46,70,96,.05);
+      font: 560 13px/1.25 -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif;
+      text-align: left;
+      cursor: pointer;
+      transition: border-color .28s ease, background .28s ease, box-shadow .28s ease, transform .35s var(--spring);
+    }
+    .standalone-select-trigger > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .standalone-select-trigger > i { position: absolute; right: 13px; color: var(--apple-blue); font-size: 17px; font-style: normal; transition: transform .42s var(--spring); }
+    .standalone-select[data-open="true"] .standalone-select-trigger > i { transform: rotate(180deg) translateY(-1px); }
+    .standalone-select-trigger:hover { border-color: rgba(0,113,227,.22); background: rgba(255,255,255,.9); box-shadow: 0 10px 22px rgba(46,70,96,.08), inset 0 1px #fff; transform: translateY(-1px); }
+    .standalone-select-trigger:focus-visible { outline: none; border-color: rgba(0,113,227,.55); box-shadow: 0 0 0 4px rgba(0,113,227,.12), inset 0 1px #fff; }
+    .standalone-select-menu {
+      position: absolute;
+      z-index: 30;
+      top: calc(100% + 8px);
+      left: 0;
+      right: 0;
+      padding: 7px;
+      display: grid;
+      gap: 3px;
+      visibility: hidden;
+      opacity: 0;
+      border: 1px solid rgba(255,255,255,.92);
+      border-radius: 18px;
+      background: rgba(250,252,255,.92);
+      box-shadow: 0 22px 54px rgba(32,55,79,.18), inset 0 1px #fff;
+      backdrop-filter: blur(28px) saturate(170%);
+      -webkit-backdrop-filter: blur(28px) saturate(170%);
+      pointer-events: none;
+      transform: translateY(-10px) scale(.96);
+      transform-origin: top center;
+      transition: opacity .24s ease, transform .42s var(--spring), visibility 0s .42s;
+    }
+    .standalone-select[data-open="true"] .standalone-select-menu { visibility: visible; opacity: 1; pointer-events: auto; transform: translateY(0) scale(1); transition-delay: 0s; }
+    .standalone-select-menu button {
+      width: 100%;
+      min-height: 38px;
+      padding: 8px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: #3a3a3c;
+      border: 0;
+      border-radius: 12px;
+      background: transparent;
+      font: 520 12px/1.35 -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif;
+      text-align: left;
+      cursor: pointer;
+      opacity: 0;
+      transform: translateY(-5px);
+      transition: color .2s ease, background .22s ease, transform .32s var(--spring), opacity .25s ease;
+    }
+    .standalone-select[data-open="true"] .standalone-select-menu button { opacity: 1; transform: translateY(0); transition-delay: calc(var(--option-index) * 35ms); }
+    .standalone-select-menu button:hover, .standalone-select-menu button:focus-visible { color: #0066cc; outline: none; background: rgba(0,113,227,.08); }
+    .standalone-select-menu button[aria-selected="true"] { color: #0066cc; background: rgba(0,113,227,.1); }
+    .standalone-select-menu button i { min-width: 16px; color: var(--apple-blue); font-style: normal; text-align: right; }
+    .selector-card:has(.standalone-select[data-open="true"]) { z-index: 20; transform: translateY(-3px); }
+
+    .award-panel-static { grid-column: 1 / -1; min-height: auto; }
+    .award-panel-static .label { color: #86868b; }
+    .standalone-award-content { margin-top: 20px; }
+    .standalone-award-content.is-entering { animation: award-swap-static .56s var(--spring) both; }
+    @keyframes award-swap-static {
+      from { opacity: 0; transform: translateY(12px) scale(.985); filter: blur(5px); }
+      to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+    }
+    .standalone-award-content header { position: relative; padding-right: 120px; }
+    .standalone-award-content header > span { color: #86868b; font-size: .68rem; letter-spacing: .07em; }
+    .standalone-award-content h3 { margin: 7px 0 0; color: var(--apple-text); font-size: 1.3rem; letter-spacing: -.025em; }
+    .standalone-award-content header b { position: absolute; top: 0; right: 0; padding: 7px 10px; color: #0066cc; border: 1px solid rgba(0,113,227,.12); border-radius: 999px; background: rgba(0,113,227,.07); font-size: .65rem; }
+    .standalone-award-content ul { margin: 22px 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; list-style: none; }
+    .standalone-award-content li { padding: 16px; display: grid; grid-template-columns: auto 1fr; gap: 5px 12px; border: 1px solid rgba(255,255,255,.9); border-radius: 18px; background: rgba(255,255,255,.58); box-shadow: 0 10px 28px rgba(46,70,96,.06), inset 0 1px #fff; opacity: 0; animation: award-item-static .45s calc(90ms + var(--award-index) * 70ms) var(--spring) forwards; }
+    @keyframes award-item-static {
+      from { opacity: 0; transform: translateY(9px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .standalone-award-content li > i { grid-row: 1 / 3; color: var(--apple-blue); font-size: .65rem; font-style: normal; }
+    .standalone-award-content li strong, .standalone-award-content li small { display: block; }
+    .standalone-award-content li strong { color: #3a3a3c; font-size: .78rem; }
+    .standalone-award-content li small { margin-top: 5px; color: #86868b; font-size: .62rem; line-height: 1.45; }
+    .standalone-award-content li em { grid-column: 2; color: #aeaeb2; font-size: .62rem; font-style: normal; }
+    .standalone-award-content .award-empty-static { margin: 22px 0 0; padding: 24px; color: #86868b; border: 1px dashed rgba(29,29,31,.12); border-radius: 18px; background: rgba(255,255,255,.38); font-size: .78rem; line-height: 1.6; text-align: center; }
+
+    .uni-card .uni-icon {
+      width: 76px;
+      height: 76px;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.94);
+      border-radius: 22px;
+      background: rgba(255,255,255,.78);
+      box-shadow: 0 14px 32px rgba(46,70,96,.11), inset 0 1px #fff;
+    }
+    .uni-card .uni-icon img { width: 64px; height: 64px; object-fit: contain; border-radius: 50%; }
+    .uni-card.hit .uni-icon img { width: 64px; height: 56px; border-radius: 0; }
+    footer { color: #86868b; border: 0; }
+    footer span { color: #0071e3; }
+
+    @media (max-width: 600px) {
+      nav { top: 10px; min-height: 58px; padding: 8px 12px; border-radius: 19px; }
+      nav .logo { font-size: .75rem; }
+      nav ul { gap: 0; }
+      nav ul li a { padding: 7px 8px; font-size: .68rem; }
+      .hero { padding-top: 118px; }
+      section { width: calc(100% - 24px); padding: 48px 22px; border-radius: 30px; }
+      .uni-card { border-radius: 26px; }
+      .standalone-award-content header { padding-right: 0; }
+      .standalone-award-content header b { position: static; display: inline-flex; margin-top: 12px; }
+      .standalone-award-content ul { grid-template-columns: 1fr; }
+    }
+
+    /* ===== 移动端、平板与桌面适配 ===== */
+    @media (min-width: 1000px) {
+      section { max-width: 1040px; }
+      .hero h1 { font-size: clamp(4.2rem, 6vw, 5.5rem); }
+      .uni-card { min-height: 340px; }
+    }
+
+    @media (min-width: 601px) and (max-width: 900px) {
+      nav { width: calc(100% - 24px); }
+      .hero { padding-right: 28px; padding-left: 28px; }
+      section { width: calc(100% - 32px); padding: 56px 34px; }
+      .about-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .standalone-select-menu { max-height: 320px; overflow-y: auto; overscroll-behavior: contain; }
+    }
+
+    @media (max-width: 600px) {
+      body { overflow-x: hidden; }
+      nav { width: calc(100% - 20px); }
+      nav ul { flex: 1; justify-content: flex-end; }
+      nav ul li a { min-height: 42px; display: grid; place-items: center; }
+      .hero { min-height: auto; padding: 112px 18px 74px; }
+      .hero h1 { font-size: clamp(2.7rem, 15vw, 4.2rem); letter-spacing: .08em; }
+      .hero .tagline { font-size: .92rem; }
+      section { margin-bottom: 18px; }
+      .about-grid,
+      .uni-cards,
+      .goals { grid-template-columns: 1fr; }
+      .info-card,
+      .uni-card,
+      .goal-item { min-width: 0; }
+      .uni-card { min-height: 310px; padding: 26px; }
+      .standalone-select-menu { max-height: min(310px, 44vh); overflow-y: auto; overscroll-behavior: contain; }
+      .standalone-select-trigger,
+      .standalone-select-menu button { min-height: 46px; }
+      footer { padding-bottom: calc(48px + env(safe-area-inset-bottom)); }
+    }
+
+    @media (max-width: 480px) {
+      nav .logo { display: none; }
+      nav ul { width: 100%; justify-content: space-between; }
+      nav ul li { flex: 1; }
+      nav ul li a { padding-right: 4px; padding-left: 4px; text-align: center; }
+      .orbit-wrapper { margin-bottom: 20px; }
+      section { width: calc(100% - 20px); padding: 44px 18px; border-radius: 28px; }
+      .section-title { font-size: 1.8rem; }
+      .interest-tag { width: 100%; justify-content: center; }
+      .standalone-award-content h3 { font-size: 1.15rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; }
+    }
+
+    @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+      nav, section, .avatar-placeholder, .info-card, .uni-card, .interest-tag, .goal-item { background: rgba(255,255,255,.95); }
+    }
+
+    @media (prefers-reduced-transparency: reduce) {
+      nav, section, .avatar-placeholder, .info-card, .uni-card, .interest-tag, .goal-item {
+        background: #fff;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+      }
+    }
+
+    /* ===== 深空星幕主题 ===== */
+    body {
+      color: #eaf4fb;
+      background:
+        radial-gradient(circle at 18% 16%, rgba(22,92,152,.28), transparent 34rem),
+        radial-gradient(circle at 86% 34%, rgba(82,43,132,.2), transparent 32rem),
+        linear-gradient(160deg, #020611, #061426 52%, #030714);
+    }
+    #stars-canvas { opacity: 1; mix-blend-mode: screen; }
+    nav {
+      color: #f5f7fb;
+      border-color: rgba(255,255,255,.17);
+      background: rgba(8,20,37,.72);
+      box-shadow: 0 16px 48px rgba(0,0,0,.3), inset 0 1px rgba(255,255,255,.11);
+    }
+    nav .logo { color: #f5f7fb; }
+    nav ul { background: rgba(255,255,255,.07); }
+    nav ul li a { color: #9fb1c3; }
+    nav ul li a:hover,
+    nav ul li a.is-active { color: #fff; background: rgba(255,255,255,.12); }
+    .hero {
+      color: #f5f7fb;
+      background:
+        radial-gradient(circle at 62% 34%, rgba(38,135,207,.18), transparent 30%),
+        radial-gradient(circle at 84% 74%, rgba(132,73,190,.13), transparent 27%),
+        linear-gradient(150deg, rgba(2,8,19,.36), rgba(6,23,41,.12) 52%, rgba(4,8,20,.38));
+    }
+    .hero::before { background: radial-gradient(circle at 30% 25%, rgba(141,214,255,.2), rgba(28,111,179,.07) 58%, transparent 74%); box-shadow: 0 35px 90px rgba(50,173,230,.08); }
+    .hero::after { background: radial-gradient(circle at 28% 22%, rgba(224,192,255,.18), rgba(107,54,164,.07) 58%, transparent 75%); box-shadow: 0 30px 90px rgba(175,82,222,.08); }
+    .hero h1 {
+      background: linear-gradient(120deg, #fff 10%, #c9e8ff 55%, #69c1ff 110%);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero .subtitle { color: #8ea7bc; }
+    .hero .tagline { color: #a9bdcf; }
+    .hero .tagline em { color: #6fc8ff; }
+    .scroll-hint { color: #9eb3c6; border-color: rgba(255,255,255,.13); background: rgba(255,255,255,.07); box-shadow: 0 12px 32px rgba(0,0,0,.17); }
+    footer { color: #8199ad; }
+    footer span { color: #70c8ff; }
+
+    /* ===== 90% 通透玻璃 ===== */
+    :root {
+      --glass-90-light: rgba(255,255,255,.10);
+      --glass-90-hover: rgba(255,255,255,.16);
+      --glass-90-border: rgba(255,255,255,.28);
+      --glass-90-blur: blur(38px) saturate(185%);
+    }
+    nav,
+    section,
+    .avatar-placeholder,
+    .info-card,
+    .uni-card,
+    .interest-tag,
+    .goal-item,
+    .standalone-award-content li,
+    .standalone-award-content .award-empty-static {
+      border-color: var(--glass-90-border);
+      background: var(--glass-90-light);
+      box-shadow: 0 26px 76px rgba(0,0,0,.27), inset 0 1px rgba(255,255,255,.16);
+      backdrop-filter: var(--glass-90-blur);
+      -webkit-backdrop-filter: var(--glass-90-blur);
+    }
+    nav { background: rgba(3,14,28,.10); }
+    .avatar-placeholder svg { stroke: #79ceff; }
+    .avatar-placeholder span { color: #9db2c4; }
+    .section-title,
+    .info-card .value,
+    .uni-card h3,
+    .goal-item p,
+    .standalone-award-content h3,
+    .standalone-award-content li strong { color: #f5f7fb; }
+    .section-subtitle,
+    .info-card .label,
+    .uni-card .uni-en,
+    .uni-card p,
+    .standalone-award-content header > span { color: #91a8bc; }
+    .info-card:hover,
+    .uni-card:hover,
+    .interest-tag:hover,
+    .goal-item:hover { border-color: rgba(255,255,255,.42); background: var(--glass-90-hover); box-shadow: 0 34px 86px rgba(0,0,0,.33), inset 0 1px rgba(255,255,255,.2); }
+    #dream {
+      background:
+        radial-gradient(circle at 88% 12%, rgba(66,178,244,.11), transparent 35%),
+        radial-gradient(circle at 8% 100%, rgba(180,99,235,.08), transparent 34%),
+        var(--glass-90-light);
+    }
+    .buaa .uni-tag { color: #8ed6ff; border-color: rgba(112,202,255,.2); background: rgba(44,150,220,.1); }
+    .hit .uni-tag { color: #d7a8f3; border-color: rgba(203,148,237,.2); background: rgba(160,83,206,.1); }
+    .interest-tag { color: #dbe9f3; }
+    .interest-tag:hover { color: #8fd7ff; }
+    .goal-item { border-left-color: #5bc3ff; }
+    .goal-item .phase { color: #79ceff; }
+    .standalone-select-trigger,
+    .standalone-select-menu,
+    .standalone-select-menu button[aria-selected="true"] { color: #edf7ff; border-color: rgba(255,255,255,.22); background: var(--glass-90-light); }
+    .standalone-select-trigger:hover { border-color: rgba(121,205,255,.35); background: var(--glass-90-hover); box-shadow: 0 12px 30px rgba(0,0,0,.18); }
+    .standalone-select-menu { box-shadow: 0 26px 64px rgba(0,0,0,.34), inset 0 1px rgba(255,255,255,.14); backdrop-filter: blur(44px) saturate(190%); -webkit-backdrop-filter: blur(44px) saturate(190%); }
+    .standalone-select-menu button { color: #c6d6e3; }
+    .standalone-select-menu button:hover,
+    .standalone-select-menu button:focus-visible,
+    .standalone-select-menu button[aria-selected="true"] { color: #8fd7ff; background: rgba(79,176,235,.12); }
+    .selector-note,
+    .standalone-award-content li em,
+    .standalone-award-content .award-empty-static { color: #9fb3c5; }
+    .standalone-award-content header b { color: #8fd7ff; border-color: rgba(105,196,255,.22); background: rgba(45,152,222,.1); }
+
+    @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+      nav, section, .avatar-placeholder, .info-card, .uni-card, .interest-tag, .goal-item, .standalone-select-menu { background: rgba(8,22,39,.94); }
+    }
+    @media (prefers-reduced-transparency: reduce) {
+      nav, section, .avatar-placeholder, .info-card, .uni-card, .interest-tag, .goal-item, .standalone-select-menu { background: #0b1d31; backdrop-filter: none; -webkit-backdrop-filter: none; }
+    }
+
+    /* 下拉菜单在文档流中展开，避免覆盖下方内容 */
+    .about-grid { align-items: start; }
+    .standalone-select-menu {
+      position: relative;
+      z-index: auto;
+      top: auto;
+      left: auto;
+      right: auto;
+      max-height: 0;
+      margin-top: 0;
+      padding-top: 0;
+      padding-bottom: 0;
+      overflow: hidden;
+      border-width: 0;
+      transform: translateY(-7px) scale(.98);
+      transition: max-height .5s var(--spring), margin-top .42s var(--spring), padding .42s var(--spring), border-width 0s .38s, opacity .24s ease, transform .42s var(--spring), visibility 0s .5s;
+    }
+    .standalone-select[data-open="true"] .standalone-select-menu {
+      max-height: 330px;
+      margin-top: 8px;
+      padding-top: 7px;
+      padding-bottom: 7px;
+      overflow-y: auto;
+      border-width: 1px;
+      transform: translateY(0) scale(1);
+      transition-delay: 0s;
+    }
+    @media (max-width: 600px) {
+      .standalone-select[data-open="true"] .standalone-select-menu { max-height: min(310px, 44vh); }
+    }
+
+    /* 联系方式：公开页面优先保护未成年人隐私 */
+    #contact { scroll-margin-top: 110px; }
+    .contact-card-static {
+      display: grid;
+      grid-template-columns: minmax(0, 1.25fr) minmax(220px, .75fr);
+      gap: clamp(18px, 3vw, 32px);
+      align-items: stretch;
+      padding: clamp(24px, 5vw, 44px);
+      border: 1px solid var(--glass-90-border);
+      border-radius: 28px;
+      background:
+        radial-gradient(circle at 92% 0%, rgba(94,199,255,.12), transparent 38%),
+        var(--glass-90-light);
+      box-shadow: 0 30px 90px rgba(0,0,0,.28), inset 0 1px rgba(255,255,255,.16);
+      backdrop-filter: var(--glass-90-blur);
+      -webkit-backdrop-filter: var(--glass-90-blur);
+    }
+    .contact-kicker-static {
+      display: inline-block;
+      margin-bottom: 16px;
+      color: #79ceff;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .16em;
+    }
+    .contact-card-static h3 {
+      margin: 0;
+      color: #f5f9ff;
+      font-size: clamp(24px, 3.2vw, 38px);
+      line-height: 1.2;
+    }
+    .contact-card-static > div:first-child > p {
+      margin: 18px 0 0;
+      color: #b6c8d7;
+      font-size: 14px;
+      line-height: 1.9;
+    }
+    .contact-status-static {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: 180px;
+      padding: 24px;
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 22px;
+      background: rgba(3,14,28,.12);
+      box-shadow: inset 0 1px rgba(255,255,255,.1);
+    }
+    .contact-status-static span {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #7f9db4;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .16em;
+    }
+    .contact-status-static i {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #75d4ff;
+      box-shadow: 0 0 16px rgba(117,212,255,.8);
+    }
+    .contact-email-static,
+    .contact-phone-static {
+      margin-top: 18px;
+      color: #edf7ff;
+      font-size: 18px;
+      font-weight: 800;
+      text-decoration: none;
+      overflow-wrap: anywhere;
+      transition: color .25s ease, transform .25s ease;
+    }
+    .contact-phone-static { margin-top: 9px; }
+    .contact-email-static:hover,
+    .contact-email-static:focus-visible,
+    .contact-phone-static:hover,
+    .contact-phone-static:focus-visible { color: #79ceff; transform: translateX(3px); }
+    .contact-email-static:focus-visible,
+    .contact-phone-static:focus-visible { outline: 2px solid rgba(121,206,255,.7); outline-offset: 5px; border-radius: 4px; }
+    .contact-status-static small { margin-top: 8px; color: #9db2c4; font-size: 12px; line-height: 1.6; }
+    @media (max-width: 700px) {
+      nav .logo { display: none; }
+      nav ul { width: 100%; justify-content: space-between; }
+      nav ul li { flex: 1; }
+      nav ul li a { padding-left: 4px; padding-right: 4px; text-align: center; }
+      .contact-card-static { grid-template-columns: 1fr; }
+      .contact-status-static { min-height: 0; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- 星空画布 -->
+<canvas id="stars-canvas"></canvas>
+
+<!-- 导航 -->
+<nav>
+  <div class="logo">李卓书 · LZS</div>
+  <ul>
+    <li><a href="#about">关于我</a></li>
+    <li><a href="#dream">梦想大学</a></li>
+    <li><a href="#interest">兴趣</a></li>
+    <li><a href="#goals">目标</a></li>
+    <li><a href="#contact">联系我</a></li>
+  </ul>
+</nav>
+
+<main>
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="orbit-wrapper">
+      <div class="orbit-ring orbit-ring-1"></div>
+      <div class="orbit-ring orbit-ring-2"></div>
+      <!-- 照片占位区 -->
+      <div class="avatar-placeholder">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#00aaff" stroke-width="1.5">
+          <circle cx="12" cy="8" r="4"/>
+          <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+        </svg>
+        <span>我的照片</span>
+      </div>
+    </div>
+
+    <h1>李 卓 书</h1>
+    <p class="subtitle">LI &nbsp; ZHUO &nbsp; SHU</p>
+    <p class="tagline">
+      来自<em>云南·曲靖</em>的逐星少年，<br/>
+      志在飞翔，仰望<em>航空航天</em>的无限苍穹。
+    </p>
+
+    <div class="scroll-hint">
+      <span>向下探索</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="6 9 12 15 18 9"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- 关于我 -->
+  <section id="about">
+    <div class="section-title">关于我</div>
+    <div class="section-subtitle">ABOUT ME</div>
+    <div class="about-grid">
+      <div class="info-card">
+        <div class="label">姓名</div>
+        <div class="value">李卓书</div>
+      </div>
+      <div class="info-card selector-card">
+        <label class="label" for="standalone-school">学校</label>
+        <div class="select-shell">
+          <div class="standalone-select" data-select="school" data-value="middle" data-open="false">
+            <button id="standalone-school" class="standalone-select-trigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="standalone-school-options" aria-describedby="standalone-school-help">
+              <span>曲靖市麒麟区第七中学（现）</span><i aria-hidden="true">⌄</i>
+            </button>
+            <div id="standalone-school-options" class="standalone-select-menu" role="listbox" aria-label="学校选择"></div>
+          </div>
+        </div>
+        <span class="selector-note" id="standalone-school-help">曲靖 · 点击选择</span>
+      </div>
+      <div class="info-card selector-card">
+        <label class="label" for="standalone-grade">年级</label>
+        <div class="select-shell">
+          <div class="standalone-select" data-select="grade" data-value="初二（现）" data-open="false">
+            <button id="standalone-grade" class="standalone-select-trigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="standalone-grade-options" aria-describedby="standalone-grade-context">
+              <span>初二（现）</span><i aria-hidden="true">⌄</i>
+            </button>
+            <div id="standalone-grade-options" class="standalone-select-menu" role="listbox" aria-label="年级选择"></div>
+          </div>
+        </div>
+        <span class="selector-note" id="standalone-grade-context" aria-live="polite">初中阶段 · 当前选择：初二（现）</span>
+      </div>
+      <div class="info-card">
+        <div class="label">所在地</div>
+        <div class="value">云南省 · 曲靖市</div>
+      </div>
+      <div class="info-card">
+        <div class="label">梦想领域</div>
+        <div class="value">航空航天工程</div>
+      </div>
+      <div class="info-card">
+        <div class="label">座右铭</div>
+        <div class="value">"不畏浮云遮望眼，自缘身在最高层"</div>
+      </div>
+      <div class="info-card award-panel-static">
+        <div class="label">奖项与成长记录 / AWARDS</div>
+        <div class="standalone-award-content is-entering" id="standalone-award-content" aria-live="polite">
+          <header>
+            <span id="award-school-name">曲靖市麒麟区第七中学</span>
+            <h3 id="award-grade-title">初二奖项专栏</h3>
+            <b id="award-status">暂无</b>
+          </header>
+          <ul id="standalone-award-list" hidden></ul>
+          <p class="award-empty-static" id="standalone-award-empty">暂无奖项记录</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 梦想大学 -->
+  <section id="dream">
+    <div class="section-title">梦想大学</div>
+    <div class="section-subtitle">DREAM UNIVERSITIES</div>
+    <div class="uni-cards">
+
+      <a class="uni-card buaa" href="https://www.buaa.edu.cn/" target="_blank" rel="noreferrer" aria-label="访问北京航空航天大学官网（在新窗口打开）">
+        <div class="uni-icon"><img src="public/beihang-emblem.jpg" alt="北京航空航天大学校徽" /></div>
+        <h3>北京航空航天大学</h3>
+        <div class="uni-en">Beihang University · BUAA</div>
+        <p>
+          中国顶尖的航空航天高校，坐落于首都北京。
+          拥有国内最强的航空宇航科学与技术学科，
+          是无数航天梦想起飞的地方。
+        </p>
+        <span class="uni-tag">访问北航官网 ↗</span>
+      </a>
+
+      <a class="uni-card hit" href="https://www.hit.edu.cn/" target="_blank" rel="noreferrer" aria-label="访问哈尔滨工业大学官网（在新窗口打开）">
+        <div class="uni-icon"><img src="public/hit-emblem.png" alt="哈尔滨工业大学校徽" /></div>
+        <h3>哈尔滨工业大学</h3>
+        <div class="uni-en">Harbin Institute of Technology · HIT</div>
+        <p>
+          中国工程技术领域的王牌院校，深耕航天技术数十年，
+          为我国航天事业培养了大批杰出人才，
+          是工程师精神与创新精神的摇篮。
+        </p>
+        <span class="uni-tag">访问哈工大官网 ↗</span>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- 兴趣爱好 -->
+  <section id="interest">
+    <div class="section-title">兴趣爱好</div>
+    <div class="section-subtitle">INTERESTS & HOBBIES</div>
+    <div class="interest-list">
+      <div class="interest-tag"><span class="icon">🚀</span>航空航天科普</div>
+      <div class="interest-tag"><span class="icon">🔭</span>天文观测</div>
+      <div class="interest-tag"><span class="icon">💻</span>编程与技术</div>
+      <div class="interest-tag"><span class="icon">📐</span>数学与物理</div>
+      <div class="interest-tag"><span class="icon">📚</span>科学阅读</div>
+      <div class="interest-tag"><span class="icon">✈️</span>飞行模拟</div>
+      <div class="interest-tag"><span class="icon">🌌</span>宇宙探索</div>
+    </div>
+  </section>
+
+  <!-- 我的目标 -->
+  <section id="goals">
+    <div class="section-title">我的目标</div>
+    <div class="section-subtitle">MY GOALS</div>
+    <div class="goals">
+      <div class="goal-item">
+        <div class="phase">近期 · 初中阶段</div>
+        <p>打好数学、物理基础，争取优异成绩，培养严谨的科学思维与自学能力。</p>
+      </div>
+      <div class="goal-item">
+        <div class="phase">中期 · 高中阶段</div>
+        <p>冲击竞赛佳绩，深入学习物理与信息技术，为报考顶尖工科院校做好充分准备。</p>
+      </div>
+      <div class="goal-item">
+        <div class="phase">长期 · 大学及未来</div>
+        <p>考入北航或哈工大，专研航空航天工程，为中国的太空探索事业贡献力量。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 联系我 -->
+  <section id="contact">
+    <div class="section-title">联系我</div>
+    <div class="section-subtitle">CONTACT ME</div>
+    <div class="contact-card-static">
+      <div>
+        <span class="contact-kicker-static">PRIVACY FIRST · 安全联系</span>
+        <h3>保持联系，也保护好个人信息。</h3>
+        <p>如果你也喜欢航空航天，欢迎通过邮箱和我交流。为了保护隐私，请不要在邮件中发送家庭住址、电话等敏感信息。</p>
+      </div>
+      <div class="contact-status-static">
+        <span><i></i> CONTACT CHANNEL</span>
+        <a class="contact-email-static" href="mailto:08978998@qq.com">08978998@qq.com</a>
+        <a class="contact-phone-static" href="tel:13908745459">13908745459</a>
+        <small>点击邮箱写邮件，点击电话即可拨号</small>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <p>© 2026 &nbsp;<span>李卓书</span>&nbsp; · &nbsp;仰望星空，脚踏实地</p>
+  <p style="margin-top:6px;">曲靖市麒麟区第七中学 · 准初二</p>
+</footer>
+
+<!-- 星空动画脚本 -->
+<script>
+  const canvas = document.getElementById('stars-canvas');
+  const ctx = canvas.getContext('2d');
+  let stars = [];
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+
+  function initStars(count) {
+    const targetCount = count ?? (window.innerWidth <= 600 ? 100 : 200);
+    stars = [];
+    for (let i = 0; i < targetCount; i++) {
+      stars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 1.4 + 0.3,
+        alpha: Math.random(),
+        speed: Math.random() * 0.004 + 0.001,
+        twinkleOffset: Math.random() * Math.PI * 2
+      });
+    }
+  }
+
+  function drawStars(t) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    stars.forEach(s => {
+      const alpha = 0.4 + 0.6 * Math.abs(Math.sin(t * s.speed * 60 + s.twinkleOffset));
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(210, 234, 255, ${alpha * 0.86})`;
+      ctx.fill();
+    });
+  }
+
+  // 偶尔划过的流星
+  let meteors = [];
+  function spawnMeteor() {
+    if (window.innerWidth <= 600 || document.hidden) return;
+    meteors.push({
+      x: Math.random() * canvas.width * 0.7,
+      y: Math.random() * canvas.height * 0.4,
+      len: Math.random() * 120 + 80,
+      speed: Math.random() * 4 + 4,
+      alpha: 1,
+      angle: Math.PI / 5
+    });
+  }
+
+  function drawMeteors() {
+    meteors = meteors.filter(m => m.alpha > 0);
+    meteors.forEach(m => {
+      ctx.save();
+      ctx.translate(m.x, m.y);
+      ctx.rotate(m.angle);
+      const grad = ctx.createLinearGradient(0, 0, m.len, 0);
+      grad.addColorStop(0, `rgba(255,255,255,0)`);
+      grad.addColorStop(1, `rgba(220,242,255,${m.alpha * 0.72})`);
+      ctx.strokeStyle = grad;
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(m.len, 0);
+      ctx.stroke();
+      ctx.restore();
+      m.x += Math.cos(m.angle) * m.speed;
+      m.y += Math.sin(m.angle) * m.speed;
+      m.alpha -= 0.018;
+    });
+  }
+
+  const reducedStarMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const meteorInterval = reducedStarMotion ? null : setInterval(spawnMeteor, 4600);
+
+  let lastStarFrame = 0;
+  function animate(t) {
+    const frameInterval = window.innerWidth <= 600 ? 42 : 32;
+    if (t - lastStarFrame >= frameInterval) {
+      drawStars(t / 1000);
+      drawMeteors();
+      lastStarFrame = t;
+    }
+    requestAnimationFrame(animate);
+  }
+
+  window.addEventListener('resize', () => { resize(); initStars(); });
+  resize();
+  initStars();
+  if (reducedStarMotion) drawStars(0);
+  else requestAnimationFrame(animate);
+
+  // 导航使用可控缓动，长距离跳转也保持自然顺滑
+  const navLinks = [...document.querySelectorAll('nav a[href^="#"]')];
+  let scrollFrame = null;
+
+  navLinks.forEach(link => {
+    link.addEventListener('click', event => {
+      const target = document.querySelector(link.getAttribute('href'));
+      if (!target) return;
+
+      event.preventDefault();
+      if (scrollFrame) cancelAnimationFrame(scrollFrame);
+
+      const start = window.scrollY;
+      const navHeight = document.querySelector('nav').offsetHeight;
+      const destination = Math.max(0, target.getBoundingClientRect().top + start - navHeight - 10);
+      const distance = destination - start;
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      navLinks.forEach(item => item.classList.toggle('is-active', item === link));
+      history.pushState(null, '', link.getAttribute('href'));
+
+      if (reducedMotion || Math.abs(distance) < 2) {
+        window.scrollTo(0, destination);
+        return;
+      }
+
+      const duration = Math.min(820, Math.max(460, Math.abs(distance) * 0.32));
+      const startedAt = performance.now();
+
+      function scrollStep(now) {
+        const progress = Math.min(1, (now - startedAt) / duration);
+        const eased = 1 - Math.pow(1 - progress, 4);
+        window.scrollTo(0, start + distance * eased);
+
+        if (progress < 1) scrollFrame = requestAnimationFrame(scrollStep);
+        else scrollFrame = null;
+      }
+
+      scrollFrame = requestAnimationFrame(scrollStep);
+    });
+  });
+
+  // 学校与年级联动选择
+  const schoolPicker = document.querySelector('[data-select="school"]');
+  const gradePicker = document.querySelector('[data-select="grade"]');
+  const gradeContext = document.getElementById('standalone-grade-context');
+  const awardContent = document.getElementById('standalone-award-content');
+  const awardSchoolName = document.getElementById('award-school-name');
+  const awardGradeTitle = document.getElementById('award-grade-title');
+  const awardStatus = document.getElementById('award-status');
+  const awardList = document.getElementById('standalone-award-list');
+  const awardEmpty = document.getElementById('standalone-award-empty');
+  const schoolOptions = [
+    { value: 'primary', label: '曲靖市麒麟区南苑小学' },
+    { value: 'middle', label: '曲靖市麒麟区第七中学（现）' }
+  ];
+  const gradeOptions = {
+    primary: ['一年级', '二年级', '三年级', '四年级', '五年级', '六年级'],
+    middle: ['初一', '初二（现）', '初三']
+  };
+  const rememberedGrades = { primary: '六年级', middle: '初二（现）' };
+  const awardsByGrade = {
+    primary: {
+      一年级: ['三好学生', '数学竞赛二等奖'],
+      二年级: ['三好学生', '数学竞赛二等奖'],
+      三年级: ['三好学生', '数学竞赛二等奖'],
+      四年级: ['三好学生', '数学竞赛二等奖'],
+      五年级: ['三好学生', '数学竞赛二等奖'],
+      六年级: ['三好学生', '数学竞赛二等奖']
+    },
+    middle: {
+      初一: ['优秀少先队员'],
+      '初二（现）': [],
+      初三: []
+    }
+  };
+
+  function closePicker(picker) {
+    picker.dataset.open = 'false';
+    picker.querySelector('.standalone-select-trigger').setAttribute('aria-expanded', 'false');
+  }
+
+  function openPicker(picker) {
+    document.querySelectorAll('.standalone-select').forEach(item => {
+      if (item !== picker) closePicker(item);
+    });
+    picker.dataset.open = 'true';
+    picker.querySelector('.standalone-select-trigger').setAttribute('aria-expanded', 'true');
+    requestAnimationFrame(() => picker.querySelector('[role="option"][aria-selected="true"]')?.focus());
+  }
+
+  function updateAwards() {
+    const school = schoolPicker.dataset.value;
+    const grade = gradePicker.dataset.value;
+    const awards = awardsByGrade[school][grade] || [];
+    awardSchoolName.textContent = school === 'middle' ? '曲靖市麒麟区第七中学' : '曲靖市麒麟区南苑小学';
+    awardGradeTitle.textContent = `${grade.replace('（现）', '')}奖项专栏`;
+    awardStatus.textContent = awards.length ? `${awards.length} 项记录` : '暂无';
+    awardList.replaceChildren(...awards.map((award, index) => {
+      const item = document.createElement('li');
+      const number = document.createElement('i');
+      const text = document.createElement('span');
+      const title = document.createElement('strong');
+      const state = document.createElement('em');
+      item.style.setProperty('--award-index', index);
+      number.textContent = String(index + 1).padStart(2, '0');
+      number.setAttribute('aria-hidden', 'true');
+      title.textContent = award;
+      state.textContent = '已记录';
+      text.append(title);
+      item.append(number, text, state);
+      return item;
+    }));
+    awardList.hidden = awards.length === 0;
+    awardEmpty.hidden = awards.length > 0;
+    awardContent.classList.remove('is-entering');
+    void awardContent.offsetWidth;
+    awardContent.classList.add('is-entering');
+  }
+
+  function chooseOption(picker, value, label) {
+    picker.dataset.value = value;
+    picker.querySelector('.standalone-select-trigger > span').textContent = label;
+    picker.querySelectorAll('[role="option"]').forEach(option => option.setAttribute('aria-selected', String(option.dataset.value === value)));
+    closePicker(picker);
+
+    if (picker === schoolPicker) {
+      renderPickerOptions(gradePicker, gradeOptions[value].map(grade => ({ value: grade, label: grade })), rememberedGrades[value]);
+      gradePicker.dataset.value = rememberedGrades[value];
+      gradePicker.querySelector('.standalone-select-trigger > span').textContent = rememberedGrades[value];
+    } else {
+      rememberedGrades[schoolPicker.dataset.value] = value;
+    }
+
+    const school = schoolPicker.dataset.value;
+    const stage = school === 'middle' ? '初中阶段' : '小学阶段';
+    gradeContext.textContent = `${stage} · 当前选择：${gradePicker.dataset.value}`;
+    updateAwards();
+    requestAnimationFrame(() => picker.querySelector('.standalone-select-trigger').focus());
+  }
+
+  function renderPickerOptions(picker, options, selectedValue) {
+    const menu = picker.querySelector('.standalone-select-menu');
+    menu.replaceChildren(...options.map((option, index) => {
+      const button = document.createElement('button');
+      const label = document.createElement('span');
+      const check = document.createElement('i');
+      button.type = 'button';
+      button.role = 'option';
+      button.tabIndex = -1;
+      button.dataset.value = option.value;
+      button.setAttribute('aria-selected', String(option.value === selectedValue));
+      button.style.setProperty('--option-index', index);
+      label.textContent = option.label;
+      check.textContent = option.value === selectedValue ? '✓' : '';
+      check.setAttribute('aria-hidden', 'true');
+      button.append(label, check);
+      button.addEventListener('click', () => chooseOption(picker, option.value, option.label));
+      button.addEventListener('keydown', event => {
+        const buttons = [...menu.querySelectorAll('[role="option"]')];
+        const currentIndex = buttons.indexOf(button);
+        if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+          event.preventDefault();
+          const direction = event.key === 'ArrowDown' ? 1 : -1;
+          buttons[(currentIndex + direction + buttons.length) % buttons.length].focus();
+        }
+        if (event.key === 'Home' || event.key === 'End') {
+          event.preventDefault();
+          buttons[event.key === 'Home' ? 0 : buttons.length - 1].focus();
+        }
+        if (event.key === 'Escape') {
+          event.preventDefault();
+          closePicker(picker);
+          picker.querySelector('.standalone-select-trigger').focus();
+        }
+      });
+      return button;
+    }));
+  }
+
+  document.querySelectorAll('.standalone-select-trigger').forEach(trigger => {
+    const picker = trigger.closest('.standalone-select');
+    trigger.addEventListener('click', () => picker.dataset.open === 'true' ? closePicker(picker) : openPicker(picker));
+    trigger.addEventListener('keydown', event => {
+      if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+        event.preventDefault();
+        openPicker(picker);
+      }
+    });
+  });
+
+  document.addEventListener('pointerdown', event => {
+    document.querySelectorAll('.standalone-select').forEach(picker => {
+      if (!picker.contains(event.target)) closePicker(picker);
+    });
+  });
+
+  renderPickerOptions(schoolPicker, schoolOptions, 'middle');
+  renderPickerOptions(gradePicker, gradeOptions.middle.map(grade => ({ value: grade, label: grade })), '初二（现）');
+</script>
+
+</body>
+</html>
