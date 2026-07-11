@@ -1266,13 +1266,48 @@
       margin-bottom: 12px;
     }
     .guestbook-message-static strong { color: #f5f9ff; font-size: 14px; }
+    .guestbook-message-static header > span {
+      display: flex;
+      align-items: flex-end;
+      flex-direction: column;
+      gap: 4px;
+      text-align: right;
+    }
     .guestbook-message-static time { color: #8fa7bc; font-size: 12px; white-space: nowrap; }
+    .guestbook-message-static small {
+      color: #79ceff;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .04em;
+      white-space: nowrap;
+    }
     .guestbook-message-static p {
       margin: 0;
       color: #c4d5e4;
       font-size: 14px;
       line-height: 1.8;
       overflow-wrap: anywhere;
+    }
+    .guestbook-recall-static {
+      margin-top: 16px;
+      min-height: 34px;
+      padding: 0 14px;
+      color: #ffd7d7;
+      border: 1px solid rgba(255,164,164,.28);
+      border-radius: 999px;
+      background: rgba(255,83,83,.1);
+      cursor: pointer;
+      transition: transform .22s var(--spring), border-color .22s ease, background .22s ease;
+    }
+    .guestbook-recall-static:hover,
+    .guestbook-recall-static:focus-visible {
+      border-color: rgba(255,164,164,.48);
+      background: rgba(255,83,83,.16);
+      transform: translateY(-1px);
+    }
+    .guestbook-recall-static:focus-visible {
+      outline: 2px solid rgba(255,164,164,.35);
+      outline-offset: 3px;
     }
     .guestbook-empty-static {
       grid-column: 1 / -1;
@@ -1826,6 +1861,7 @@
   const guestbookEmpty = document.getElementById('guestbook-empty');
   const guestbookStorageKey = 'lzs-guestbook-v1';
   const maxGuestbookMessages = 20;
+  const guestbookRecallWindowMs = 5 * 60 * 1000;
   const schoolOptions = [
     { value: 'primary', label: '曲靖市麒麟区南苑小学' },
     { value: 'middle', label: '曲靖市麒麟区第七中学（现）' }
@@ -2052,6 +2088,13 @@
     }
   }
 
+  function formatGuestbookRemaining(time) {
+    const totalSeconds = Math.max(0, Math.ceil(time / 1000));
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    return `${minutes}分${String(seconds).padStart(2, '0')}秒`;
+  }
+
   function createGuestbookId() {
     return window.crypto?.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
   }
@@ -2061,19 +2104,47 @@
       const card = document.createElement('article');
       const header = document.createElement('header');
       const name = document.createElement('strong');
+      const meta = document.createElement('span');
       const time = document.createElement('time');
+      const recallNote = document.createElement('small');
       const body = document.createElement('p');
+      const recallButton = document.createElement('button');
+      const remaining = item.createdAt + guestbookRecallWindowMs - Date.now();
+      const canRecall = remaining > 0;
 
       card.className = 'guestbook-message-static';
       name.textContent = item.name;
       time.textContent = formatGuestbookTime(item.createdAt);
       time.dateTime = new Date(item.createdAt).toISOString();
+      recallNote.textContent = canRecall ? `可撤回 ${formatGuestbookRemaining(remaining)}` : '撤回时间已结束';
       body.textContent = item.message;
-      header.append(name, time);
+      meta.append(time, recallNote);
+      header.append(name, meta);
       card.append(header, body);
+      if (canRecall) {
+        recallButton.type = 'button';
+        recallButton.className = 'guestbook-recall-static';
+        recallButton.textContent = '撤回';
+        recallButton.addEventListener('click', () => recallGuestbookMessage(item.id));
+        card.append(recallButton);
+      }
       return card;
     }));
     guestbookEmpty.hidden = guestbookMessages.length > 0;
+  }
+
+  function recallGuestbookMessage(id) {
+    const target = guestbookMessages.find(item => item.id === id);
+    if (!target) return;
+    if (Date.now() - target.createdAt > guestbookRecallWindowMs) {
+      guestbookStatus.textContent = '这条留言已超过 5 分钟，不能撤回。';
+      renderGuestbookMessages();
+      return;
+    }
+    guestbookMessages = guestbookMessages.filter(item => item.id !== id);
+    writeGuestbookMessages();
+    renderGuestbookMessages();
+    guestbookStatus.textContent = '留言已撤回。';
   }
 
   function closePicker(picker) {
@@ -2278,6 +2349,7 @@
     guestbookCounter.textContent = '0/120';
     guestbookStatus.textContent = '留言已发射成功。';
   });
+  window.setInterval(renderGuestbookMessages, 1000);
 
   document.addEventListener('pointerdown', event => {
     document.querySelectorAll('.standalone-select').forEach(picker => {
