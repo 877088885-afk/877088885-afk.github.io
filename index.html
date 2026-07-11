@@ -717,8 +717,42 @@
     .standalone-award-content header > span { color: #86868b; font-size: .68rem; letter-spacing: .07em; }
     .standalone-award-content h3 { margin: 7px 0 0; color: var(--apple-text); font-size: 1.3rem; letter-spacing: -.025em; }
     .standalone-award-content header b { position: absolute; top: 0; right: 0; padding: 7px 10px; color: #0066cc; border: 1px solid rgba(0,113,227,.12); border-radius: 999px; background: rgba(0,113,227,.07); font-size: .65rem; }
+    .award-editor-static { margin-top: 18px; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px; align-items: end; }
+    .award-editor-static label { grid-column: 1 / -1; color: #86868b; font-size: .65rem; letter-spacing: .08em; }
+    .award-editor-row-static { min-width: 0; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; }
+    .award-editor-static input {
+      min-width: 0;
+      min-height: 42px;
+      padding: 10px 12px;
+      color: var(--apple-text);
+      border: 1px solid rgba(29,29,31,.1);
+      border-radius: 14px;
+      outline: none;
+      background: rgba(255,255,255,.58);
+      box-shadow: inset 0 1px rgba(255,255,255,.9), 0 7px 18px rgba(46,70,96,.05);
+      font: 560 13px/1.25 -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif;
+      transition: border-color .24s ease, box-shadow .24s ease, background .24s ease;
+    }
+    .award-editor-static input:focus { border-color: rgba(0,113,227,.5); background: rgba(255,255,255,.74); box-shadow: 0 0 0 4px rgba(0,113,227,.12), inset 0 1px #fff; }
+    .award-editor-static button,
+    .award-remove-static {
+      min-height: 42px;
+      padding: 0 14px;
+      color: #eaf7ff;
+      border: 1px solid rgba(121,205,255,.28);
+      border-radius: 14px;
+      background: linear-gradient(180deg, rgba(61,178,245,.28), rgba(0,113,227,.18));
+      box-shadow: inset 0 1px rgba(255,255,255,.22), 0 10px 24px rgba(0,0,0,.16);
+      font: 650 12px/1 -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif;
+      cursor: pointer;
+      transition: transform .25s var(--spring), opacity .2s ease, border-color .2s ease, background .2s ease;
+    }
+    .award-editor-static button:hover,
+    .award-remove-static:hover { transform: translateY(-1px); border-color: rgba(121,205,255,.48); }
+    .award-editor-static button:disabled { opacity: .45; cursor: not-allowed; transform: none; }
+    .award-reset-static { background: rgba(255,255,255,.08) !important; color: #9fb3c5 !important; border-color: rgba(255,255,255,.18) !important; }
     .standalone-award-content ul { margin: 22px 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; list-style: none; }
-    .standalone-award-content li { padding: 16px; display: grid; grid-template-columns: auto 1fr; gap: 5px 12px; border: 1px solid rgba(255,255,255,.9); border-radius: 18px; background: rgba(255,255,255,.58); box-shadow: 0 10px 28px rgba(46,70,96,.06), inset 0 1px #fff; opacity: 0; animation: award-item-static .45s calc(90ms + var(--award-index) * 70ms) var(--spring) forwards; }
+    .standalone-award-content li { padding: 16px; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 5px 12px; border: 1px solid rgba(255,255,255,.9); border-radius: 18px; background: rgba(255,255,255,.58); box-shadow: 0 10px 28px rgba(46,70,96,.06), inset 0 1px #fff; opacity: 0; animation: award-item-static .45s calc(90ms + var(--award-index) * 70ms) var(--spring) forwards; }
     @keyframes award-item-static {
       from { opacity: 0; transform: translateY(9px); }
       to { opacity: 1; transform: translateY(0); }
@@ -728,6 +762,7 @@
     .standalone-award-content li strong { color: #3a3a3c; font-size: .78rem; }
     .standalone-award-content li small { margin-top: 5px; color: #86868b; font-size: .62rem; line-height: 1.45; }
     .standalone-award-content li em { grid-column: 2; color: #aeaeb2; font-size: .62rem; font-style: normal; }
+    .award-remove-static { grid-row: 1 / 3; grid-column: 3; min-height: 32px; align-self: center; padding: 0 10px; color: #ffdfdf; border-color: rgba(255,116,116,.24); background: rgba(255,69,58,.12); font-size: .62rem; }
     .standalone-award-content .award-empty-static { margin: 22px 0 0; padding: 24px; color: #86868b; border: 1px dashed rgba(29,29,31,.12); border-radius: 18px; background: rgba(255,255,255,.38); font-size: .78rem; line-height: 1.6; text-align: center; }
 
     .uni-card .uni-icon {
@@ -757,6 +792,9 @@
       .standalone-award-content header { padding-right: 0; }
       .standalone-award-content header b { position: static; display: inline-flex; margin-top: 12px; }
       .standalone-award-content ul { grid-template-columns: 1fr; }
+      .award-editor-static { grid-template-columns: 1fr; }
+      .award-editor-row-static { grid-template-columns: 1fr; }
+      .award-editor-static button { width: 100%; }
     }
 
     /* ===== 移动端、平板与桌面适配 ===== */
@@ -943,6 +981,13 @@
     .uni-card .uni-en,
     .uni-card p,
     .standalone-award-content header > span { color: #91a8bc; }
+    .award-editor-static label { color: #8fa7bc; }
+    .award-editor-static input {
+      color: #f5f7fb;
+      border-color: rgba(255,255,255,.18);
+      background: var(--glass-97-light);
+    }
+    .award-editor-static input::placeholder { color: #7f95a8; }
     .info-card:hover,
     .uni-card:hover,
     .interest-tag:hover,
@@ -1205,6 +1250,14 @@
             <h3 id="award-grade-title">初二奖项专栏</h3>
             <b id="award-status">暂无</b>
           </header>
+          <div class="award-editor-static">
+            <label for="standalone-award-input">自定义奖项</label>
+            <div class="award-editor-row-static">
+              <input id="standalone-award-input" type="text" maxlength="28" placeholder="输入奖项名称" />
+              <button id="standalone-award-add" type="button">添加</button>
+            </div>
+            <button id="standalone-award-reset" class="award-reset-static" type="button">恢复默认</button>
+          </div>
           <ul id="standalone-award-list" hidden></ul>
           <p class="award-empty-static" id="standalone-award-empty">暂无奖项记录</p>
         </div>
@@ -1245,7 +1298,7 @@
     </div>
   </section>
 
-  <!-- 兴趣爱好 -->
+   <!-- 兴趣爱好 -->
   <section id="interest">
     <div class="section-title">兴趣爱好</div>
     <div class="section-subtitle">INTERESTS & HOBBIES</div>
@@ -1452,6 +1505,10 @@
   const awardStatus = document.getElementById('award-status');
   const awardList = document.getElementById('standalone-award-list');
   const awardEmpty = document.getElementById('standalone-award-empty');
+  const awardInput = document.getElementById('standalone-award-input');
+  const awardAdd = document.getElementById('standalone-award-add');
+  const awardReset = document.getElementById('standalone-award-reset');
+  const awardStorageKey = 'lzs-award-overrides-v1';
   const schoolOptions = [
     { value: 'primary', label: '曲靖市麒麟区南苑小学' },
     { value: 'middle', label: '曲靖市麒麟区第七中学（现）' }
@@ -1476,6 +1533,68 @@
       初三: []
     }
   };
+  let awardOverrides = readAwardOverrides();
+
+  function getAwardKey(school, grade) {
+    return `${school}::${grade}`;
+  }
+
+  function readAwardOverrides() {
+    try {
+      const stored = localStorage.getItem(awardStorageKey);
+      if (!stored) return {};
+      const parsed = JSON.parse(stored);
+      if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) return {};
+      return Object.fromEntries(Object.entries(parsed).map(([key, value]) => [
+        key,
+        Array.isArray(value) ? value.map(item => String(item).trim()).filter(Boolean) : []
+      ]));
+    } catch {
+      return {};
+    }
+  }
+
+  function writeAwardOverrides() {
+    try {
+      localStorage.setItem(awardStorageKey, JSON.stringify(awardOverrides));
+    } catch {
+      /* 页面仍可编辑，只是不持久保存。 */
+    }
+  }
+
+  function getCurrentAwards() {
+    const school = schoolPicker.dataset.value;
+    const grade = gradePicker.dataset.value;
+    const key = getAwardKey(school, grade);
+    return awardOverrides[key] || awardsByGrade[school][grade] || [];
+  }
+
+  function setCurrentAwards(nextAwards) {
+    const school = schoolPicker.dataset.value;
+    const grade = gradePicker.dataset.value;
+    awardOverrides[getAwardKey(school, grade)] = nextAwards;
+    writeAwardOverrides();
+    updateAwards();
+  }
+
+  function resetCurrentAwards() {
+    const school = schoolPicker.dataset.value;
+    const grade = gradePicker.dataset.value;
+    delete awardOverrides[getAwardKey(school, grade)];
+    writeAwardOverrides();
+    awardInput.value = '';
+    awardAdd.disabled = true;
+    updateAwards();
+  }
+
+  function addCurrentAward() {
+    const award = awardInput.value.trim();
+    if (!award) return;
+    const awards = getCurrentAwards();
+    if (!awards.includes(award)) setCurrentAwards([...awards, award]);
+    awardInput.value = '';
+    awardAdd.disabled = true;
+  }
 
   function closePicker(picker) {
     picker.dataset.open = 'false';
@@ -1494,23 +1613,33 @@
   function updateAwards() {
     const school = schoolPicker.dataset.value;
     const grade = gradePicker.dataset.value;
-    const awards = awardsByGrade[school][grade] || [];
+    const awardKey = getAwardKey(school, grade);
+    const awards = getCurrentAwards();
     awardSchoolName.textContent = school === 'middle' ? '曲靖市麒麟区第七中学' : '曲靖市麒麟区南苑小学';
     awardGradeTitle.textContent = `${grade.replace('（现）', '')}奖项专栏`;
     awardStatus.textContent = awards.length ? `${awards.length} 项记录` : '暂无';
+    awardReset.disabled = awardOverrides[awardKey] === undefined;
     awardList.replaceChildren(...awards.map((award, index) => {
       const item = document.createElement('li');
       const number = document.createElement('i');
       const text = document.createElement('span');
       const title = document.createElement('strong');
       const state = document.createElement('em');
+      const removeButton = document.createElement('button');
       item.style.setProperty('--award-index', index);
       number.textContent = String(index + 1).padStart(2, '0');
       number.setAttribute('aria-hidden', 'true');
       title.textContent = award;
       state.textContent = '已记录';
+      removeButton.type = 'button';
+      removeButton.className = 'award-remove-static';
+      removeButton.textContent = '删除';
+      removeButton.setAttribute('aria-label', `删除${award}`);
+      removeButton.addEventListener('click', () => {
+        setCurrentAwards(getCurrentAwards().filter((_, currentIndex) => currentIndex !== index));
+      });
       text.append(title);
-      item.append(number, text, state);
+      item.append(number, text, state, removeButton);
       return item;
     }));
     awardList.hidden = awards.length === 0;
@@ -1534,6 +1663,8 @@
       rememberedGrades[schoolPicker.dataset.value] = value;
     }
 
+    awardInput.value = '';
+    awardAdd.disabled = true;
     const school = schoolPicker.dataset.value;
     const stage = school === 'middle' ? '初中阶段' : '小学阶段';
     gradeContext.textContent = `${stage} · 当前选择：${gradePicker.dataset.value}`;
@@ -1591,6 +1722,18 @@
     });
   });
 
+  awardInput.addEventListener('input', () => {
+    awardAdd.disabled = !awardInput.value.trim();
+  });
+  awardInput.addEventListener('keydown', event => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      addCurrentAward();
+    }
+  });
+  awardAdd.addEventListener('click', addCurrentAward);
+  awardReset.addEventListener('click', resetCurrentAwards);
+
   document.addEventListener('pointerdown', event => {
     document.querySelectorAll('.standalone-select').forEach(picker => {
       if (!picker.contains(event.target)) closePicker(picker);
@@ -1599,6 +1742,8 @@
 
   renderPickerOptions(schoolPicker, schoolOptions, 'middle');
   renderPickerOptions(gradePicker, gradeOptions.middle.map(grade => ({ value: grade, label: grade })), '初二（现）');
+  awardAdd.disabled = true;
+  updateAwards();
 </script>
 
 </body>
