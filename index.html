@@ -719,6 +719,20 @@
     .standalone-award-content header b { position: absolute; top: 0; right: 0; padding: 7px 10px; color: #0066cc; border: 1px solid rgba(0,113,227,.12); border-radius: 999px; background: rgba(0,113,227,.07); font-size: .65rem; }
     .award-editor-static { margin-top: 18px; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px; align-items: end; }
     .award-editor-static label { grid-column: 1 / -1; color: #86868b; font-size: .65rem; letter-spacing: .08em; }
+    .award-admin-bar-static {
+      grid-column: 1 / -1;
+      padding: 8px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      justify-content: space-between;
+      border: 1px solid rgba(255,255,255,.16);
+      border-radius: 16px;
+      background: rgba(255,255,255,.045);
+      box-shadow: inset 0 1px rgba(255,255,255,.12);
+    }
+    .award-admin-bar-static span { padding: 0 6px; color: #9fb3c5; font-size: .65rem; letter-spacing: .08em; }
     .award-editor-row-static { min-width: 0; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; }
     .award-editor-static input {
       min-width: 0;
@@ -750,6 +764,7 @@
     .award-editor-static button:hover,
     .award-remove-static:hover { transform: translateY(-1px); border-color: rgba(121,205,255,.48); }
     .award-editor-static button:disabled { opacity: .45; cursor: not-allowed; transform: none; }
+    .award-editor-static .award-admin-bar-static button { min-height: 34px; padding: 0 11px; color: #dff4ff; border-color: rgba(121,205,255,.22); background: rgba(255,255,255,.06); box-shadow: inset 0 1px rgba(255,255,255,.12); font-size: .62rem; }
     .award-reset-static { background: rgba(255,255,255,.08) !important; color: #9fb3c5 !important; border-color: rgba(255,255,255,.18) !important; }
     .standalone-award-content ul { margin: 22px 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; list-style: none; }
     .standalone-award-content li { padding: 16px; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 5px 12px; border: 1px solid rgba(255,255,255,.9); border-radius: 18px; background: rgba(255,255,255,.58); box-shadow: 0 10px 28px rgba(46,70,96,.06), inset 0 1px #fff; opacity: 0; animation: award-item-static .45s calc(90ms + var(--award-index) * 70ms) var(--spring) forwards; }
@@ -764,6 +779,59 @@
     .standalone-award-content li em { grid-column: 2; color: #aeaeb2; font-size: .62rem; font-style: normal; }
     .award-remove-static { grid-row: 1 / 3; grid-column: 3; min-height: 32px; align-self: center; padding: 0 10px; color: #ffdfdf; border-color: rgba(255,116,116,.24); background: rgba(255,69,58,.12); font-size: .62rem; }
     .standalone-award-content .award-empty-static { margin: 22px 0 0; padding: 24px; color: #86868b; border: 1px dashed rgba(29,29,31,.12); border-radius: 18px; background: rgba(255,255,255,.38); font-size: .78rem; line-height: 1.6; text-align: center; }
+
+    .admin-modal-backdrop {
+      position: fixed;
+      z-index: 400;
+      inset: 0;
+      padding: 22px;
+      display: grid;
+      place-items: center;
+      background: rgba(0,0,0,.42);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+    .admin-modal-backdrop[hidden] { display: none; }
+    .admin-modal {
+      position: relative;
+      width: min(100%, 420px);
+      padding: 26px;
+      color: #f5f7fb;
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 26px;
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.025)), rgba(3,14,28,.58);
+      box-shadow: 0 34px 96px rgba(0,0,0,.42), inset 0 1px rgba(255,255,255,.38);
+      backdrop-filter: blur(34px) saturate(180%);
+      -webkit-backdrop-filter: blur(34px) saturate(180%);
+    }
+    .admin-modal > p { margin: 0 0 8px; color: #79ceff; font-size: .65rem; letter-spacing: .14em; }
+    .admin-modal h3 { margin: 0 0 18px; font-size: 1.5rem; letter-spacing: -.03em; }
+    .admin-modal form { display: grid; gap: 10px; }
+    .admin-modal label { color: #9fb3c5; font-size: .7rem; letter-spacing: .08em; }
+    .admin-modal input {
+      min-height: 44px;
+      padding: 10px 12px;
+      color: #f5f7fb;
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 14px;
+      outline: none;
+      background: rgba(255,255,255,.06);
+      font: 560 14px/1.25 -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif;
+    }
+    .admin-modal input:focus { border-color: rgba(121,205,255,.5); box-shadow: 0 0 0 4px rgba(121,205,255,.12); }
+    .admin-modal small { color: #ffb7b7; font-size: .75rem; }
+    .admin-modal-actions { margin-top: 6px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .admin-modal-actions button,
+    .admin-modal-close {
+      min-height: 40px;
+      color: #eaf7ff;
+      border: 1px solid rgba(121,205,255,.24);
+      border-radius: 14px;
+      background: rgba(255,255,255,.07);
+      cursor: pointer;
+    }
+    .admin-modal-actions button[type="submit"] { color: white; background: linear-gradient(180deg, rgba(61,178,245,.35), rgba(0,113,227,.24)); }
+    .admin-modal-close { position: absolute; top: 14px; right: 14px; width: 36px; min-height: 36px; padding: 0; border-radius: 50%; font-size: 1.35rem; }
 
     .uni-card .uni-icon {
       width: 76px;
@@ -795,6 +863,7 @@
       .award-editor-static { grid-template-columns: 1fr; }
       .award-editor-row-static { grid-template-columns: 1fr; }
       .award-editor-static button { width: 100%; }
+      .admin-modal-actions { grid-template-columns: 1fr; }
     }
 
     /* ===== 移动端、平板与桌面适配 ===== */
@@ -1252,6 +1321,12 @@
           </header>
           <div class="award-editor-static">
             <label for="standalone-award-input">自定义奖项</label>
+            <div class="award-admin-bar-static" aria-live="polite">
+              <span id="award-admin-status">管理员未登录</span>
+              <button id="award-admin-login" type="button">管理员登录</button>
+              <button id="award-admin-password" type="button">修改密码</button>
+              <button id="award-admin-logout" type="button" hidden>退出</button>
+            </div>
             <div class="award-editor-row-static">
               <input id="standalone-award-input" type="text" maxlength="28" placeholder="输入奖项名称" />
               <button id="standalone-award-add" type="button">添加</button>
@@ -1264,6 +1339,34 @@
       </div>
     </div>
   </section>
+
+  <div class="admin-modal-backdrop" id="admin-modal" hidden>
+    <div class="admin-modal" role="dialog" aria-modal="true" aria-labelledby="admin-modal-title">
+      <button class="admin-modal-close" id="admin-modal-close" type="button" aria-label="关闭管理员窗口">×</button>
+      <p>ADMIN ACCESS</p>
+      <h3 id="admin-modal-title">管理员登录</h3>
+      <form id="admin-login-form">
+        <label for="admin-password">管理员密码</label>
+        <input id="admin-password" type="password" placeholder="请输入管理员密码" />
+        <small id="admin-login-message" hidden></small>
+        <div class="admin-modal-actions">
+          <button type="button" id="admin-login-cancel">取消</button>
+          <button type="submit">登录</button>
+        </div>
+      </form>
+      <form id="admin-password-form" hidden>
+        <label for="new-admin-password">新密码</label>
+        <input id="new-admin-password" type="password" placeholder="至少 4 位" />
+        <label for="confirm-admin-password">确认新密码</label>
+        <input id="confirm-admin-password" type="password" placeholder="再次输入新密码" />
+        <small id="admin-password-message" hidden></small>
+        <div class="admin-modal-actions">
+          <button type="button" id="admin-password-cancel">取消</button>
+          <button type="submit">保存</button>
+        </div>
+      </form>
+    </div>
+  </div>
 
   <!-- 梦想大学 -->
   <section id="dream">
@@ -1509,6 +1612,24 @@
   const awardAdd = document.getElementById('standalone-award-add');
   const awardReset = document.getElementById('standalone-award-reset');
   const awardStorageKey = 'lzs-award-overrides-v1';
+  const adminPasswordKey = 'lzs-admin-password-hash-v1';
+  const defaultAdminPasswordHash = 'sha256:91b4d142823f7d20c5f08df69122de43f35f057a988d9619f6d3138485c9a203';
+  const adminStatus = document.getElementById('award-admin-status');
+  const adminLoginButton = document.getElementById('award-admin-login');
+  const adminPasswordButton = document.getElementById('award-admin-password');
+  const adminLogoutButton = document.getElementById('award-admin-logout');
+  const adminModal = document.getElementById('admin-modal');
+  const adminModalTitle = document.getElementById('admin-modal-title');
+  const adminModalClose = document.getElementById('admin-modal-close');
+  const adminLoginForm = document.getElementById('admin-login-form');
+  const adminPasswordForm = document.getElementById('admin-password-form');
+  const adminPasswordInput = document.getElementById('admin-password');
+  const adminLoginMessage = document.getElementById('admin-login-message');
+  const newAdminPasswordInput = document.getElementById('new-admin-password');
+  const confirmAdminPasswordInput = document.getElementById('confirm-admin-password');
+  const adminPasswordMessage = document.getElementById('admin-password-message');
+  const adminLoginCancel = document.getElementById('admin-login-cancel');
+  const adminPasswordCancel = document.getElementById('admin-password-cancel');
   const schoolOptions = [
     { value: 'primary', label: '曲靖市麒麟区南苑小学' },
     { value: 'middle', label: '曲靖市麒麟区第七中学（现）' }
@@ -1534,9 +1655,108 @@
     }
   };
   let awardOverrides = readAwardOverrides();
+  let adminAuthenticated = false;
+  let pendingAdminAction = null;
 
   function getAwardKey(school, grade) {
     return `${school}::${grade}`;
+  }
+
+  async function hashAdminPassword(password) {
+    if (!window.crypto?.subtle) return `plain:${password}`;
+    const encoded = new TextEncoder().encode(password);
+    const digest = await crypto.subtle.digest('SHA-256', encoded);
+    const hex = [...new Uint8Array(digest)].map(byte => byte.toString(16).padStart(2, '0')).join('');
+    return `sha256:${hex}`;
+  }
+
+  async function readAdminPasswordHash() {
+    try {
+      return localStorage.getItem(adminPasswordKey) || defaultAdminPasswordHash;
+    } catch {
+      return defaultAdminPasswordHash;
+    }
+  }
+
+  async function checkAdminPassword(password) {
+    const [inputHash, storedHash] = await Promise.all([
+      hashAdminPassword(password),
+      readAdminPasswordHash()
+    ]);
+    return inputHash === storedHash;
+  }
+
+  async function writeAdminPassword(password) {
+    try {
+      localStorage.setItem(adminPasswordKey, await hashAdminPassword(password));
+    } catch {
+      /* 静态网页无后端，浏览器禁用存储时无法保存新密码。 */
+    }
+  }
+
+  function setAdminAuthenticated(nextValue) {
+    adminAuthenticated = nextValue;
+    adminStatus.textContent = nextValue ? '管理员已登录' : '管理员未登录';
+    adminLoginButton.hidden = nextValue;
+    adminLogoutButton.hidden = !nextValue;
+  }
+
+  function showAdminMessage(target, message) {
+    target.textContent = message;
+    target.hidden = false;
+  }
+
+  function clearAdminMessages() {
+    adminLoginMessage.hidden = true;
+    adminPasswordMessage.hidden = true;
+    adminLoginMessage.textContent = '';
+    adminPasswordMessage.textContent = '';
+  }
+
+  function openAdminModal(mode, action = null) {
+    pendingAdminAction = action;
+    clearAdminMessages();
+    adminPasswordInput.value = '';
+    newAdminPasswordInput.value = '';
+    confirmAdminPasswordInput.value = '';
+    adminModal.hidden = false;
+
+    if (mode === 'password') {
+      adminModalTitle.textContent = '修改管理员密码';
+      adminLoginForm.hidden = true;
+      adminPasswordForm.hidden = false;
+      requestAnimationFrame(() => newAdminPasswordInput.focus());
+      return;
+    }
+
+    adminModalTitle.textContent = '管理员登录';
+    adminLoginForm.hidden = false;
+    adminPasswordForm.hidden = true;
+    requestAnimationFrame(() => adminPasswordInput.focus());
+  }
+
+  function closeAdminModal() {
+    adminModal.hidden = true;
+    pendingAdminAction = null;
+    clearAdminMessages();
+  }
+
+  function requireAdmin(action) {
+    if (adminAuthenticated) {
+      runAdminAction(action);
+      return;
+    }
+    openAdminModal('login', action);
+  }
+
+  function runAdminAction(action) {
+    if (!action) return;
+    if (action.type === 'add') addCurrentAward();
+    if (action.type === 'remove') {
+      setCurrentAwards(getCurrentAwards().filter((_, index) => index !== action.index));
+    }
+    if (action.type === 'reset') resetCurrentAwards();
+    if (action.type === 'change-password') openAdminModal('password');
   }
 
   function readAwardOverrides() {
@@ -1636,7 +1856,7 @@
       removeButton.textContent = '删除';
       removeButton.setAttribute('aria-label', `删除${award}`);
       removeButton.addEventListener('click', () => {
-        setCurrentAwards(getCurrentAwards().filter((_, currentIndex) => currentIndex !== index));
+        requireAdmin({ type: 'remove', index });
       });
       text.append(title);
       item.append(number, text, state, removeButton);
@@ -1728,11 +1948,51 @@
   awardInput.addEventListener('keydown', event => {
     if (event.key === 'Enter') {
       event.preventDefault();
-      addCurrentAward();
+      requireAdmin({ type: 'add' });
     }
   });
-  awardAdd.addEventListener('click', addCurrentAward);
-  awardReset.addEventListener('click', resetCurrentAwards);
+  awardAdd.addEventListener('click', () => requireAdmin({ type: 'add' }));
+  awardReset.addEventListener('click', () => requireAdmin({ type: 'reset' }));
+  adminLoginButton.addEventListener('click', () => openAdminModal('login', { type: 'add' }));
+  adminPasswordButton.addEventListener('click', () => requireAdmin({ type: 'change-password' }));
+  adminLogoutButton.addEventListener('click', () => setAdminAuthenticated(false));
+  adminModalClose.addEventListener('click', closeAdminModal);
+  adminLoginCancel.addEventListener('click', closeAdminModal);
+  adminPasswordCancel.addEventListener('click', closeAdminModal);
+  adminModal.addEventListener('click', event => {
+    if (event.target === adminModal) closeAdminModal();
+  });
+  adminLoginForm.addEventListener('submit', async event => {
+    event.preventDefault();
+    if (!(await checkAdminPassword(adminPasswordInput.value))) {
+      showAdminMessage(adminLoginMessage, '密码不正确，请再试一次。');
+      return;
+    }
+    setAdminAuthenticated(true);
+    const action = pendingAdminAction;
+    if (action?.type === 'change-password') {
+      pendingAdminAction = null;
+      openAdminModal('password');
+      return;
+    }
+    closeAdminModal();
+    runAdminAction(action);
+  });
+  adminPasswordForm.addEventListener('submit', async event => {
+    event.preventDefault();
+    const nextPassword = newAdminPasswordInput.value.trim();
+    if (nextPassword.length < 4) {
+      showAdminMessage(adminPasswordMessage, '新密码至少需要 4 位。');
+      return;
+    }
+    if (nextPassword !== confirmAdminPasswordInput.value.trim()) {
+      showAdminMessage(adminPasswordMessage, '两次输入的新密码不一致。');
+      return;
+    }
+    await writeAdminPassword(nextPassword);
+    setAdminAuthenticated(true);
+    closeAdminModal();
+  });
 
   document.addEventListener('pointerdown', event => {
     document.querySelectorAll('.standalone-select').forEach(picker => {
